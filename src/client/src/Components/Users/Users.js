@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 
-const Users = ({ designers, currentSelected, updateDesigners, updateCurrentSelected, updateNations }) => {
+const Users = ({
+	designers,
+	currentSelected,
+	updateDesigners,
+	updateCurrentSelected,
+	updateNations,
+	updateLoading
+}) => {
 	useEffect(() => {
 		const getUsers = async () => {
 			let usersResponse = await fetch("http://localhost:5000/users");
@@ -10,6 +17,11 @@ const Users = ({ designers, currentSelected, updateDesigners, updateCurrentSelec
 		};
 		getUsers();
 	}, []);
+
+	const updateCurrentSelectedAndSpinner = value => {
+		updateLoading(true);
+		updateCurrentSelected(value);
+	};
 
 	let navDesigners = null;
 
@@ -30,7 +42,7 @@ const Users = ({ designers, currentSelected, updateDesigners, updateCurrentSelec
 		});
 	}
 	return (
-		<div className="sideNav" onClick={event => updateCurrentSelected(event.target.innerHTML)}>
+		<div className="sideNav" onClick={event => updateCurrentSelectedAndSpinner(event.target.innerHTML)}>
 			{navDesigners}
 		</div>
 	);

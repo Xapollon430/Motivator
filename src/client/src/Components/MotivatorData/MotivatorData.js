@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
+import Spinner from "../../public/spinner.gif";
 
 let times = ["Last Month", "Last Week", "This Month"];
 
-const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations }) => {
+const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, loading, updateLoading }) => {
 	useEffect(() => {
 		const getSales = async () => {
 			if (nations.includes(currentSelected)) {
@@ -16,6 +17,7 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations })
 
 				updateSalesData(sales);
 			}
+			updateLoading(false);
 		};
 		if (currentSelected) {
 			getSales();
@@ -24,7 +26,9 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations })
 
 	let viewData = <h1>Welcome UCS Tuesday Meeting!</h1>;
 
-	if (salesData) {
+	if (loading) {
+		viewData = <img src={Spinner} />;
+	} else if (salesData) {
 		viewData = (
 			<div className="motivatorApi">
 				{salesData.map((data, index) => {

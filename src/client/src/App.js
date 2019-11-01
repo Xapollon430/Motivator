@@ -3,7 +3,7 @@ import Users from "./Components/Users/Users";
 import MotivatorData from "./Components/MotivatorData/MotivatorData";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import Logo from "./images/logo.png";
+import Logo from "./public/logo.png";
 import "./App.css";
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
 	let [nations, updateNations] = useState(null);
 	let [salesData, updateSalesData] = useState(null);
 	let [currentSelected, updateCurrentSelected] = useState("");
+	let [loading, updateLoading] = useState(false);
 
 	return (
 		<div className="wrapper">
@@ -21,15 +22,18 @@ function App() {
 					updateCurrentSelected={updateCurrentSelected}
 					updateDesigners={updateDesigners}
 					updateNations={updateNations}
+					updateLoading={updateLoading}
 				/>
 			</div>
 			<div className="mx-3">
 				<img src={Logo} alt="Image"></img>
 				<MotivatorData
+					loading={loading}
 					salesData={salesData}
 					currentSelected={currentSelected}
 					updateSalesData={updateSalesData}
 					nations={nations}
+					updateLoading={updateLoading}
 				/>
 			</div>
 		</div>

@@ -21,7 +21,6 @@ body {
 .boxWrap {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	grid-gap: 20px;
 	text-align: center;
 }
 
@@ -37,7 +36,6 @@ body {
 }
 
 .sideNav div {
-	margin: 5px 0;
 	border-top: 1px solid rgb(204, 204, 204);
 	border-bottom: 1px solid rgb(204, 204, 204);
 	text-align: center;
