@@ -4,6 +4,7 @@ const Router = require("./routes/routes");
 const dotenv = require("dotenv");
 const cors = require("cors");
 dotenv.config();
+let x;
 
 const PORT = process.env.PORT || 5000;
 
