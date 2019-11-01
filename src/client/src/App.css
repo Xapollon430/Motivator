@@ -1,0 +1,63 @@
+body {
+	background: rgb(245, 245, 245);
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: 250px 1fr;
+}
+
+.motivatorWrap {
+	display: grid;
+}
+
+.box {
+	border: 1px solid black;
+	width: 200px;
+	height: 120px;
+	background: rgb(38, 67, 97);
+}
+
+.boxWrap {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 20px;
+	text-align: center;
+}
+
+.sideNav {
+	height: 100vh; /* Full-height: remove this if you want "auto" height */
+	width: 250px; /* Set the width of the sidebar */
+	position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+	z-index: 1; /* Stay on top */
+	top: 0; /* Stay at the top */
+	left: 0;
+	overflow-x: hidden; /* Disable horizontal scroll */
+	border-right: 1px solid rgb(204, 204, 204);
+}
+
+.sideNav div {
+	margin: 5px 0;
+	border-top: 1px solid rgb(204, 204, 204);
+	border-bottom: 1px solid rgb(204, 204, 204);
+	text-align: center;
+}
+
+.amount {
+	font-size: 2rem;
+	color: white;
+}
+
+.dataTitle {
+	color: white;
+}
+
+.designerName {
+	font-size: 1.5rem;
+}
+
+.currentDesigner {
+	border-top: 1px solid rgb(201, 47, 66);
+	border-bottom: 1px solid rgb(201, 47, 66);
+	color: rgb(201, 47, 66);
+}
