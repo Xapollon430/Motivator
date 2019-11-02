@@ -1,28 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Spinner from "../../public/spinner.gif";
+import { store } from "../../../data/store";
+import { getSalesByNation, getSalesByDesigner, useSales, updateSales } from "../../../data/sales/actions";
 
 let times = ["Last Month", "Last Week", "This Month"];
 
-const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, loading, updateLoading }) => {
-	useEffect(() => {
-		const getSales = async () => {
-			if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`);
-				let sales = await salesResponse.json();
-				console.log(sales);
-				updateSalesData(sales);
-			} else {
-				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`);
-				let sales = await salesResponse.json();
 
-				updateSalesData(sales);
-			}
-			updateLoading(false);
-		};
-		if (currentSelected) {
-			getSales();
+const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, loading, updateLoading }) => {
+	const sales = useSales()
+	
+	const getSales = () => {
+		let myPromise;
+		if (nations.includes(currentSelected)) {
+			myPromise = getSalesByNation(currentSelected);
+		} else {
+			myPromise = getSalesByDesigner(currentSelected);
 		}
-	}, [currentSelected]);
+		myPromise
+			.then(sales => updateSales(sales))
+			.catch(err => console.error(err))
+			.then(() => updateLoading(false));
+	};
+
+	if (currentSelected) {
+		getSales();
+	}
 
 	let viewData = <h1>Welcome UCS Tuesday Meeting!</h1>;
 
@@ -31,7 +33,7 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, l
 	} else if (salesData) {
 		viewData = (
 			<div className="motivatorApi">
-				{salesData.map((data, index) => {
+				{sales.map((data, index) => {
 					return (
 						<div key={index} className="dataWrap">
 							<h3>{times[index]}</h3>
