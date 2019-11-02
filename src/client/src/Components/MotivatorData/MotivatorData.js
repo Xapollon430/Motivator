@@ -27,7 +27,7 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, l
 	let viewData = <h1>Welcome UCS Tuesday Meeting!</h1>;
 
 	if (loading) {
-		viewData = <img src={Spinner} />;
+		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
 		viewData = (
 			<div className="motivatorApi">

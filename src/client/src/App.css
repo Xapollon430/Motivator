@@ -19,6 +19,7 @@ body {
 }
 
 .boxWrap {
+	grid-gap: 20px;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	text-align: center;
@@ -52,10 +53,26 @@ body {
 
 .designerName {
 	font-size: 1.5rem;
+	cursor: default;
 }
 
 .currentDesigner {
 	border-top: 1px solid rgb(201, 47, 66);
 	border-bottom: 1px solid rgb(201, 47, 66);
 	color: rgb(201, 47, 66);
+}
+
+.spinner {
+	display: block;
+	margin: 0 auto;
+}
+
+.deciLogo {
+	position: absolute;
+	bottom: 0;
+	right: 5px;
+}
+
+.deciLogo a {
+	color: rgb(0, 192, 239) !important;
 }

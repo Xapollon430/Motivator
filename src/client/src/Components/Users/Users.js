@@ -19,8 +19,10 @@ const Users = ({
 	}, []);
 
 	const updateCurrentSelectedAndSpinner = value => {
-		updateLoading(true);
-		updateCurrentSelected(value);
+		if (value !== currentSelected) {
+			updateLoading(true);
+			updateCurrentSelected(value);
+		}
 	};
 
 	let navDesigners = null;
