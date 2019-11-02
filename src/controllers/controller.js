@@ -1,5 +1,6 @@
-const Token = require("../db/database");
+const Token = require("../db/Token");
 const fetch = require("node-fetch");
+const jwt = require("jsonwebtoken");
 
 let monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 let monthsWith30Days = [4, 6, 9, 11];
@@ -42,12 +43,6 @@ const getNation = async (req, res) => {
 		nationInfo.push(await getDealsAndSales(nationDeals, nationSets, filteredUsers[i]));
 	}
 
-	// for (let i = 0; i < nationInfo.length; i++) {
-	// 	console.log(filteredUsers[i]);
-	// 	console.log(nationInfo[i].lastMonthDealsAndSets.sortedSets.length);
-	// 	console.log("11111");
-	// }
-
 	for (let i = 0; i < nationInfo.length; i++) {
 		lastMonthInfo.sortedDeals.push(...nationInfo[i].lastMonthDealsAndSets.sortedDeals);
 		lastMonthInfo.sortedSets.push(...nationInfo[i].lastMonthDealsAndSets.sortedSets);
@@ -76,6 +71,26 @@ const getUsers = async (req, res) => {
 		usersEndPoint,
 		nationsEndPoint
 	});
+};
+
+const Login = async (req, res) => {
+	try {
+		let { username, password } = req.body;
+		if (username === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
+			let token = jwt.sign({}, "secret");
+			await Token.jwtToken.create({
+				jwtToken: token
+			});
+
+			res.send({
+				token
+			});
+		}
+	} catch (e) {
+		res.status(400).send({
+			error: "Wrong username or password"
+		});
+	}
 };
 
 const getNationData = async nation => {
@@ -419,5 +434,6 @@ const getThisMonthDealsAndSets = (deals, sets, name) => {
 module.exports = {
 	getDesigner,
 	getNation,
-	getUsers
+	getUsers,
+	Login
 };

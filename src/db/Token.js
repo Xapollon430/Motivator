@@ -5,9 +5,25 @@ dotenv.config();
 
 mongoose.set("useCreateIndex", true);
 
-mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, {
+mongoose.connect(`${process.env.MONGODB_TOKEN_CONNECTION_STRING}`, {
 	useUnifiedTopology: true,
 	useNewUrlParser: true
+});
+
+mongoose.connect(`${process.env.MONGODB_JWT_CONNECTION_STRING}`, {
+	useUnifiedTopology: true,
+	useNewUrlParser: true
+});
+
+let jwtTokenSchema = new mongoose.Schema({
+	jwtToken: {
+		type: String
+	},
+	expireAt: {
+		type: Date,
+		default: Date.now(),
+		expires: 3000
+	}
 });
 
 let accessTokenSchema = new mongoose.Schema({
@@ -22,6 +38,7 @@ let accessTokenSchema = new mongoose.Schema({
 });
 
 let AccessTokenModel = mongoose.model("accessToken", accessTokenSchema);
+let jwtToken = mongoose.model("jwtToken", jwtTokenSchema);
 
 const createAccessToken = async () => {
 	let tokenResponse = await fetch(
@@ -49,10 +66,7 @@ const getAccessToken = async () => {
 	return newCreatedAccessToken.accessToken;
 };
 
-const getLogin = () => {
-	//Later
-};
-
 module.exports = {
-	getAccessToken
+	getAccessToken,
+	jwtToken
 };
