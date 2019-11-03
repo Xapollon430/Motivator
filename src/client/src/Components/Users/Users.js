@@ -6,11 +6,16 @@ const Users = ({
 	updateDesigners,
 	updateCurrentSelected,
 	updateNations,
-	updateLoading
+	updateLoading,
+	loggedIn
 }) => {
 	useEffect(() => {
 		const getUsers = async () => {
-			let usersResponse = await fetch("http://localhost:5000/users");
+			let usersResponse = await fetch("http://localhost:5000/users", {
+				headers: {
+					"Authorization": `Bearer ?`
+				}
+			});
 			let users = await usersResponse.json();
 			updateNations(users.nationsEndPoint);
 			updateDesigners(users);
@@ -18,10 +23,10 @@ const Users = ({
 		getUsers();
 	}, []);
 
-	const updateCurrentSelectedAndSpinner = value => {
-		if (value !== currentSelected) {
+	const updateCurrentSelectedAndSpinner = event => {
+		if (event.target.innerHTML !== currentSelected && event.target.classList.contains("designerName")) {
 			updateLoading(true);
-			updateCurrentSelected(value);
+			updateCurrentSelected(event.target.innerHTML);
 		}
 	};
 
@@ -43,8 +48,11 @@ const Users = ({
 			);
 		});
 	}
+	if (!loggedIn) {
+		navDesigners = null;
+	}
 	return (
-		<div className="sideNav" onClick={event => updateCurrentSelectedAndSpinner(event.target.innerHTML)}>
+		<div className="sideNav" onClick={event => updateCurrentSelectedAndSpinner(event)}>
 			{navDesigners}
 		</div>
 	);

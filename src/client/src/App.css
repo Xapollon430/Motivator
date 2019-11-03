@@ -76,3 +76,7 @@ body {
 .deciLogo a {
 	color: rgb(0, 192, 239) !important;
 }
+
+.form-group {
+	width: 400px;
+}

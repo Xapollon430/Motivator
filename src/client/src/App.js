@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Users from "./Components/Users/Users";
 import MotivatorData from "./Components/MotivatorData/MotivatorData";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-import Logo from "./public/logo.png";
+
 import "./App.css";
 
 function App() {
@@ -12,6 +11,7 @@ function App() {
 	let [salesData, updateSalesData] = useState(null);
 	let [currentSelected, updateCurrentSelected] = useState("");
 	let [loading, updateLoading] = useState(false);
+	let [loggedIn, updateLogin] = useState(false);
 
 	return (
 		<div className="wrapper">
@@ -26,7 +26,6 @@ function App() {
 				/>
 			</div>
 			<div className="mx-3">
-				<img src={Logo} alt="Image"></img>
 				<MotivatorData
 					loading={loading}
 					salesData={salesData}
@@ -36,7 +35,7 @@ function App() {
 					updateLoading={updateLoading}
 				/>
 			</div>
-			<span class="deciLogo">
+			<span className="deciLogo">
 				Powered by <a href="https://decidigital.com/"> Deci Digital</a>
 			</span>
 		</div>

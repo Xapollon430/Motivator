@@ -74,19 +74,17 @@ const getUsers = async (req, res) => {
 };
 
 const Login = async (req, res) => {
-	try {
-		let { username, password } = req.body;
-		if (username === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
-			let token = jwt.sign({}, "secret");
-			await Token.jwtToken.create({
-				jwtToken: token
-			});
+	let { username, password } = req.body;
+	if (username === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
+		let token = jwt.sign({}, "secret");
+		await Token.jwtToken.create({
+			jwtToken: token
+		});
 
-			res.send({
-				token
-			});
-		}
-	} catch (e) {
+		res.status(200).send({
+			token
+		});
+	} else {
 		res.status(400).send({
 			error: "Wrong username or password"
 		});

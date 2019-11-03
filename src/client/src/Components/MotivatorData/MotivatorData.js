@@ -1,39 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Spinner from "../../public/spinner.gif";
-import { store } from "../../../data/store";
-import { getSalesByNation, getSalesByDesigner, useSales, updateSales } from "../../../data/sales/actions";
+import Logo from "../../public/logo.png";
 
 let times = ["Last Month", "Last Week", "This Month"];
 
-
 const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, loading, updateLoading }) => {
-	const sales = useSales()
-	
-	const getSales = () => {
-		let myPromise;
-		if (nations.includes(currentSelected)) {
-			myPromise = getSalesByNation(currentSelected);
-		} else {
-			myPromise = getSalesByDesigner(currentSelected);
+	useEffect(() => {
+		const getSales = async () => {
+			if (nations.includes(currentSelected)) {
+				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
+					headers: {
+						"Authorization": `Bearer ?`
+					}
+				});
+				let sales = await salesResponse.json();
+				updateSalesData(sales);
+			} else {
+				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
+					headers: {
+						"Authorization": `Bearer ?`
+					}
+				});
+				let sales = await salesResponse.json();
+
+				updateSalesData(sales);
+			}
+			updateLoading(false);
+		};
+		if (currentSelected) {
+			getSales();
 		}
-		myPromise
-			.then(sales => updateSales(sales))
-			.catch(err => console.error(err))
-			.then(() => updateLoading(false));
+	}, [currentSelected]);
+
+	const handleSubmit = async event => {
+		event.preventDefault();
+		console.log(21);
+		let formData = new FormData(event.target);
+		let tokenResponse = await fetch("http://localhost:5000/login", {
+			method: "POST",
+			body: formData
+		});
+		if(tokenResponse.status === 400){
+			let token = await tokenResponse.json();
+			// localStorage.setItem("jwtToken", token);
+		}
+		else
 	};
 
-	if (currentSelected) {
-		getSales();
-	}
-
-	let viewData = <h1>Welcome UCS Tuesday Meeting!</h1>;
+	let viewData = (
+		<form className="loginForm" onSubmit={e => handleSubmit(e)}>
+			<h1>Welcome USC Tuesday Meeting!</h1>
+			<div className="form-group">
+				<input type="text" className="form-control" placeholder="Username" />
+			</div>
+			<div className="form-group">
+				<input type="password" className="form-control" placeholder="Password" />
+			</div>
+			<button type="submit" className="btn btn-primary">
+				Submit
+			</button>
+		</form>
+	);
 
 	if (loading) {
 		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
 		viewData = (
 			<div className="motivatorApi">
-				{sales.map((data, index) => {
+				<img src={Logo} alt="Image"></img>
+				{salesData.map((data, index) => {
 					return (
 						<div key={index} className="dataWrap">
 							<h3>{times[index]}</h3>
