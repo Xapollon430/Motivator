@@ -4,13 +4,27 @@ import Logo from "../../public/logo.png";
 
 let times = ["Last Month", "Last Week", "This Month"];
 
-const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, loading, updateLoading }) => {
+const MotivatorData = ({
+	updateLogin,
+	currentSelected,
+	updateSalesData,
+	salesData,
+	nations,
+	loading,
+	updateLoading,
+	loginFail,
+	loginFailUpdate,
+	loggedIn
+}) => {
+	let loginError = null;
+	let viewData = null;
+
 	useEffect(() => {
 		const getSales = async () => {
 			if (nations.includes(currentSelected)) {
 				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
 					headers: {
-						"Authorization": `Bearer ?`
+						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let sales = await salesResponse.json();
@@ -18,7 +32,7 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, l
 			} else {
 				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
 					headers: {
-						"Authorization": `Bearer ?`
+						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let sales = await salesResponse.json();
@@ -34,39 +48,58 @@ const MotivatorData = ({ currentSelected, updateSalesData, salesData, nations, l
 
 	const handleSubmit = async event => {
 		event.preventDefault();
-		console.log(21);
-		let formData = new FormData(event.target);
+		let username = document.querySelector(".username").value;
+		let password = document.querySelector(".password").value;
+		let data = JSON.stringify({
+			username,
+			password
+		});
 		let tokenResponse = await fetch("http://localhost:5000/login", {
 			method: "POST",
-			body: formData
+			headers: { "Content-Type": "application/json" },
+			mode: "cors",
+			body: data
 		});
-		if(tokenResponse.status === 400){
+		if (tokenResponse.status === 400) {
+			loginFailUpdate(true);
+		} else {
 			let token = await tokenResponse.json();
-			// localStorage.setItem("jwtToken", token);
+			let localStorageToken = JSON.stringify(token.token);
+			localStorage.setItem("jwtToken", localStorageToken);
+			updateLogin(true);
+			loginFailUpdate(true);
 		}
-		else
 	};
 
-	let viewData = (
-		<form className="loginForm" onSubmit={e => handleSubmit(e)}>
-			<h1>Welcome USC Tuesday Meeting!</h1>
-			<div className="form-group">
-				<input type="text" className="form-control" placeholder="Username" />
+	if (loginFail) {
+		loginError = (
+			<div className="alert alert-danger mt-2 error" role="alert">
+				Wrong username or password!
 			</div>
-			<div className="form-group">
-				<input type="password" className="form-control" placeholder="Password" />
-			</div>
-			<button type="submit" className="btn btn-primary">
-				Submit
-			</button>
-		</form>
-	);
+		);
+	}
 
-	if (loading) {
+	if (!loggedIn) {
+		viewData = (
+			<form className="loginForm" onSubmit={e => handleSubmit(e)}>
+				<h1>Welcome UCS Tuesday Meeting!</h1>
+				<div className="form-group">
+					<input type="text" className="form-control username" placeholder="Username" />
+				</div>
+				<div className="form-group">
+					<input type="password" className="form-control password" placeholder="Password" />
+				</div>
+				{loginError}
+				<button type="submit" className="btn btn-primary">
+					Submit
+				</button>
+			</form>
+		);
+	} else if (loading) {
 		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
 		viewData = (
-			<div className="motivatorApi">
+			<div className="motivatorApi mt-3">
 				<img src={Logo} alt="Image"></img>
 				{salesData.map((data, index) => {
 					return (

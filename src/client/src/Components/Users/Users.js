@@ -11,17 +11,20 @@ const Users = ({
 }) => {
 	useEffect(() => {
 		const getUsers = async () => {
-			let usersResponse = await fetch("http://localhost:5000/users", {
-				headers: {
-					"Authorization": `Bearer ?`
-				}
-			});
-			let users = await usersResponse.json();
-			updateNations(users.nationsEndPoint);
-			updateDesigners(users);
+			if (loggedIn) {
+				console.log(JSON.parse(localStorage.getItem("jwtToken")));
+				let usersResponse = await fetch("http://localhost:5000/users", {
+					headers: {
+						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
+					}
+				});
+				let users = await usersResponse.json();
+				updateNations(users.nationsEndPoint);
+				updateDesigners(users);
+			}
 		};
 		getUsers();
-	}, []);
+	}, [loggedIn]);
 
 	const updateCurrentSelectedAndSpinner = event => {
 		if (event.target.innerHTML !== currentSelected && event.target.classList.contains("designerName")) {
@@ -32,7 +35,9 @@ const Users = ({
 
 	let navDesigners = null;
 
-	if (designers) {
+	if (!loggedIn) {
+		navDesigners = null;
+	} else if (designers) {
 		let allUsers = [];
 		allUsers.push(...designers.nationsEndPoint);
 		allUsers.push(...designers.usersEndPoint);
@@ -48,9 +53,7 @@ const Users = ({
 			);
 		});
 	}
-	if (!loggedIn) {
-		navDesigners = null;
-	}
+
 	return (
 		<div className="sideNav" onClick={event => updateCurrentSelectedAndSpinner(event)}>
 			{navDesigners}

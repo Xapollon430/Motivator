@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Users from "./Components/Users/Users";
 import MotivatorData from "./Components/MotivatorData/MotivatorData";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,12 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
-	let [designers, updateDesigners] = useState(null);
+	let [designers, updateDesigners] = useState(false);
 	let [nations, updateNations] = useState(null);
 	let [salesData, updateSalesData] = useState(null);
 	let [currentSelected, updateCurrentSelected] = useState("");
 	let [loading, updateLoading] = useState(false);
 	let [loggedIn, updateLogin] = useState(false);
+	let [loginFail, loginFailUpdate] = useState(false);
 
 	return (
 		<div className="wrapper">
@@ -23,6 +24,7 @@ function App() {
 					updateDesigners={updateDesigners}
 					updateNations={updateNations}
 					updateLoading={updateLoading}
+					loggedIn={loggedIn}
 				/>
 			</div>
 			<div className="mx-3">
@@ -33,6 +35,10 @@ function App() {
 					updateSalesData={updateSalesData}
 					nations={nations}
 					updateLoading={updateLoading}
+					updateLogin={updateLogin}
+					loginFail={loginFail}
+					loginFailUpdate={loginFailUpdate}
+					loggedIn={loggedIn}
 				/>
 			</div>
 			<span className="deciLogo">
@@ -41,5 +47,4 @@ function App() {
 		</div>
 	);
 }
-
 export default App;

@@ -323,6 +323,8 @@ const getLastWeekDealsAndSets = (deals, sets, name) => {
 	beginningWeek.setUTCHours(0, 0, 0, 0);
 	endWeek.setUTCHours(0, 0, 0, 0);
 
+	console.log(beginningWeek);
+	console.log(endWeek);
 	let sortedDeals = deals.filter(record => {
 		let date = new Date(record.Created_Time.substring(0, 10));
 		if (date >= beginningWeek && date <= endWeek && record.Owner.name === name) {

@@ -80,3 +80,7 @@ body {
 .form-group {
 	width: 400px;
 }
+
+.error {
+	width: 400px;
+}
