@@ -116,7 +116,7 @@ const MotivatorData = ({
 								</div>
 								<div className="box">
 									<h5 className="dataTitle">Revenue Generated</h5>
-									<div className="amount">${Math.trunc(data.revenueGenerated)}</div>
+									<div className="amount">${Math.trunc(data.revenueGenerated).toLocaleString()}</div>
 								</div>
 								<div className="box">
 									<h5 className="dataTitle">Sales Won</h5>
@@ -124,7 +124,7 @@ const MotivatorData = ({
 								</div>
 								<div className="box">
 									<h5 className="dataTitle">Average Sale</h5>
-									<div className="amount">${Math.trunc(data.averageSale)}</div>
+									<div className="amount">${Math.trunc(data.averageSale).toLocaleString()}</div>
 								</div>
 							</div>
 						</div>

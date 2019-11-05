@@ -4,8 +4,11 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon ./src/server.js",
-		"test": "nodemon test.js"
+		"start": "nodemon index.js",
+		"server": "npm start",
+		"client": "npm start --prefix ./src/client",
+		"dev": "concurrently \"npm run server\" \"npm run client\"",
+		"heroku-postbuid": "NPM_CONFIG_PRODUCTION=false npm install  --prefix ./src/client && npm run build --prefix ./src/client"
 	},
 	"author": "",
 	"license": "ISC",

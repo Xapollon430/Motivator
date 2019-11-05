@@ -10,6 +10,7 @@ const getDesigner = async (req, res) => {
 	let { deals, sets } = await getDesinerData(name);
 
 	let designerInfo = await getDealsAndSales(deals, sets, name);
+	console.log(designerInfo.lastMonthDealsAndSets.salesWon);
 	res.json([designerInfo.lastMonthDealsAndSets, designerInfo.lastWeekDealsAndSets, designerInfo.thisMonthDealsAndSets]);
 };
 
@@ -323,8 +324,6 @@ const getLastWeekDealsAndSets = (deals, sets, name) => {
 	beginningWeek.setUTCHours(0, 0, 0, 0);
 	endWeek.setUTCHours(0, 0, 0, 0);
 
-	console.log(beginningWeek);
-	console.log(endWeek);
 	let sortedDeals = deals.filter(record => {
 		let date = new Date(record.Created_Time.substring(0, 10));
 		if (date >= beginningWeek && date <= endWeek && record.Owner.name === name) {
