@@ -87,7 +87,7 @@ const Login = async (req, res) => {
 		});
 	} else {
 		res.status(400).send({
-			error: "Wrong username or password"
+			error: `{${(process.env.ADMIN_LOGIN, process.env.ADMIN_PASSWORD)}}`
 		});
 	}
 };
