@@ -3,7 +3,6 @@ import Spinner from "../../public/spinner.gif";
 import Logo from "../../public/logo.png";
 
 let times = ["Last Month", "Last Week", "This Month"];
-let x;
 const MotivatorData = ({
 	updateLogin,
 	currentSelected,

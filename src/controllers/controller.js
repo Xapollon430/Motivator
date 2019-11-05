@@ -86,7 +86,7 @@ const Login = async (req, res) => {
 		});
 	} else {
 		res.status(400).send({
-			error: `{${process.env.ADMIN_LOGIN}`
+			error: `${process.env.ADMIN_PASSWORD}`
 		});
 	}
 };
