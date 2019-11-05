@@ -12,7 +12,7 @@ const Users = ({
 	useEffect(() => {
 		const getUsers = async () => {
 			if (loggedIn) {
-				let usersResponse = await fetch("http://localhost:5000/users", {
+				let usersResponse = await fetch("/users", {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
