@@ -10,7 +10,6 @@ const getDesigner = async (req, res) => {
 	let { deals, sets } = await getDesinerData(name);
 
 	let designerInfo = await getDealsAndSales(deals, sets, name);
-	console.log(designerInfo.lastMonthDealsAndSets.salesWon);
 	res.json([designerInfo.lastMonthDealsAndSets, designerInfo.lastWeekDealsAndSets, designerInfo.thisMonthDealsAndSets]);
 };
 
@@ -87,7 +86,7 @@ const Login = async (req, res) => {
 		});
 	} else {
 		res.status(400).send({
-			error: `{${(process.env.ADMIN_LOGIN, process.env.ADMIN_PASSWORD)}}`
+			error: `{${process.env.ADMIN_LOGIN}`
 		});
 	}
 };

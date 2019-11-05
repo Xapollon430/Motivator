@@ -12,13 +12,12 @@ const Users = ({
 	useEffect(() => {
 		const getUsers = async () => {
 			if (loggedIn) {
-				let usersResponse = await fetch("https://ucsdashboard.herokuapp.com/users", {
+				let usersResponse = await fetch("http://localhost:5000/users", {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let users = await usersResponse.json();
-				console.log(users);
 				updateNations(users.nationsEndPoint);
 				updateDesigners(users);
 			}

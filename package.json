@@ -4,10 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node server.js",
-		"server": "nodemon server.js",
+		"start": "nodemon ./src/server.js",
 		"client": "npm start --prefix ./src/client",
-		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ./src/client && npm run build --prefix ./src/client"
 	},
 	"author": "",
