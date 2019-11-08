@@ -12,7 +12,7 @@ const Users = ({
 	useEffect(() => {
 		const getUsers = async () => {
 			if (loggedIn) {
-				let usersResponse = await fetch("https://ucsdashboard.herokuapp.com/users", {
+				let usersResponse = await fetch("/users", {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -22,6 +22,7 @@ const Users = ({
 				updateDesigners(users);
 			}
 		};
+
 		getUsers();
 	}, [loggedIn]);
 

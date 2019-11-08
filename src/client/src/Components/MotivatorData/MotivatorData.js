@@ -3,6 +3,8 @@ import Spinner from "../../public/spinner.gif";
 import Logo from "../../public/logo.png";
 
 let times = ["Last Month", "Last Week", "This Month"];
+let extraDataTitle = ["Products Involved", "Customer Source"];
+
 const MotivatorData = ({
 	updateLogin,
 	currentSelected,
@@ -13,30 +15,50 @@ const MotivatorData = ({
 	updateLoading,
 	loginFail,
 	loginFailUpdate,
-	loggedIn
+	loggedIn,
+	updateExtraData,
+	extraData
 }) => {
 	let loginError = null;
 	let viewData = null;
 
 	useEffect(() => {
 		const getSales = async () => {
-			if (nations.includes(currentSelected)) {
+			if (currentSelected === "Company") {
+				let salesResponse = await fetch(`/company`, {
+					headers: {
+						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
+					}
+				});
+				let salesJson = await salesResponse.json();
+
+				let extraData = salesJson.splice(3, 1);
+
+				updateExtraData(extraData);
+				updateSalesData(salesJson);
+			} else if (nations.includes(currentSelected)) {
 				let salesResponse = await fetch(`/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
-				let sales = await salesResponse.json();
-				updateSalesData(sales);
+				let salesJson = await salesResponse.json();
+
+				let extraData = salesJson.splice(3, 1);
+
+				updateExtraData(extraData);
+				updateSalesData(salesJson);
 			} else {
 				let salesResponse = await fetch(`/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
-				let sales = await salesResponse.json();
+				let salesJson = await salesResponse.json();
+				let extraData = salesJson.splice(3, 1);
 
-				updateSalesData(sales);
+				updateExtraData(extraData);
+				updateSalesData(salesJson);
 			}
 			updateLoading(false);
 		};
@@ -97,12 +119,37 @@ const MotivatorData = ({
 	} else if (loading) {
 		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
+		let productsInvolved = extraData[0].sortedProductsInvolved;
+		let customerSource = extraData[0].sortedProjectType;
+		let productsInvolvedView = [];
+		let customerSourceView = [];
+
+		for (let i = 0; i < productsInvolved[0].length; i++) {
+			productsInvolvedView.push(
+				<div className="boxWrap">
+					<div className="box">
+						<h5 className="dataTitle">{productsInvolved[0][i]}</h5>
+						<div className="amount">{productsInvolved[1][i]}</div>
+					</div>
+				</div>
+			);
+		}
+
+		for (let i = 0; i < customerSource[0].length; i++) {
+			customerSourceView.push(
+				<div className="box">
+					<h5 className="dataTitle">{customerSource[0][i]}</h5>
+					<div className="amount">{customerSource[1][i]}</div>
+				</div>
+			);
+		}
+
 		viewData = (
-			<div className="motivatorApi mt-3">
+			<div className="my-3">
 				<img src={Logo} alt="Image"></img>
 				{salesData.map((data, index) => {
 					return (
-						<div key={index} className="dataWrap">
+						<div key={index}>
 							<h3>{times[index]}</h3>
 							<div className="boxWrap">
 								<div className="box">
@@ -129,10 +176,14 @@ const MotivatorData = ({
 						</div>
 					);
 				})}
+				<h3>Products Involved Last And This Month</h3>
+				<div className="boxWrap">{productsInvolvedView}</div>
+				<h3>Customer Source Involved Last And This Month</h3>
+
+				<div className="boxWrap">{customerSourceView}</div>
 			</div>
 		);
 	}
-
 	return viewData;
 };
 

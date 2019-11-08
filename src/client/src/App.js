@@ -13,6 +13,7 @@ function App() {
 	let [loading, updateLoading] = useState(false);
 	let [loggedIn, updateLogin] = useState(false);
 	let [loginFail, loginFailUpdate] = useState(false);
+	let [extraData, updateExtraData] = useState(null);
 
 	return (
 		<div className="wrapper">
@@ -39,6 +40,8 @@ function App() {
 					loginFail={loginFail}
 					loginFailUpdate={loginFailUpdate}
 					loggedIn={loggedIn}
+					extraData={extraData}
+					updateExtraData={updateExtraData}
 				/>
 			</div>
 			<span className="deciLogo">

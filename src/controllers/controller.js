@@ -10,7 +10,23 @@ const getDesigner = async (req, res) => {
 	let { deals, sets } = await getDesinerData(name);
 
 	let designerInfo = await getDealsAndSales(deals, sets, name);
-	res.json([designerInfo.lastMonthDealsAndSets, designerInfo.lastWeekDealsAndSets, designerInfo.thisMonthDealsAndSets]);
+
+	let dealsForExtraData = designerInfo.lastMonthDealsAndSets.sortedDeals.concat(
+		designerInfo.thisMonthDealsAndSets.sortedDeals
+	);
+
+	let setsForExtraData = designerInfo.lastMonthDealsAndSets.sortedSets.concat(
+		designerInfo.thisMonthDealsAndSets.sortedSets
+	);
+
+	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
+
+	res.json([
+		designerInfo.lastMonthDealsAndSets,
+		designerInfo.lastWeekDealsAndSets,
+		designerInfo.thisMonthDealsAndSets,
+		extraData
+	]);
 };
 
 const getNation = async (req, res) => {
@@ -62,11 +78,19 @@ const getNation = async (req, res) => {
 	lastWeekInfo.averageSale = lastWeekInfo.revenueGenerated / lastWeekInfo.salesWon.length;
 	thisMonthInfo.averageSale = thisMonthInfo.revenueGenerated / thisMonthInfo.salesWon.length;
 
-	res.json([lastMonthInfo, lastWeekInfo, thisMonthInfo]);
+	let dealsForExtraData = lastMonthInfo.sortedDeals.concat(thisMonthInfo.sortedDeals);
+
+	let setsForExtraData = lastMonthInfo.sortedSets.concat(thisMonthInfo.sortedSets);
+
+	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
+
+	res.json([lastMonthInfo, lastWeekInfo, thisMonthInfo, extraData]);
 };
 
 const getUsers = async (req, res) => {
 	let { usersEndPoint, nationsEndPoint } = await getUsersName();
+	nationsEndPoint.unshift("Company");
+
 	res.json({
 		usersEndPoint,
 		nationsEndPoint
@@ -86,9 +110,138 @@ const Login = async (req, res) => {
 		});
 	} else {
 		res.status(400).send({
-			error: `${process.env.ADMIN_PASSWORD}`
+			error: `Wrong username or password`
 		});
 	}
+};
+
+const getCompany = async (req, res) => {
+	let { companyDeals, companySets, usersEndPoint } = await getCompanyData();
+
+	let companyInfo = [];
+	let lastMonthInfo = {
+		sortedSets: [],
+		sortedDeals: [],
+		revenueGenerated: 0,
+		salesWon: [],
+		averageSale: 0
+	};
+	let lastWeekInfo = {
+		sortedSets: [],
+		sortedDeals: [],
+		revenueGenerated: 0,
+		salesWon: [],
+		averageSale: 0
+	};
+	let thisMonthInfo = {
+		sortedSets: [],
+		sortedDeals: [],
+		revenueGenerated: 0,
+		salesWon: [],
+		averageSale: 0
+	};
+
+	for (let i = 0; i < usersEndPoint.length; i++) {
+		companyInfo.push(await getDealsAndSales(companyDeals, companySets, usersEndPoint[i]));
+	}
+
+	for (let i = 0; i < companyInfo.length; i++) {
+		lastMonthInfo.sortedDeals.push(...companyInfo[i].lastMonthDealsAndSets.sortedDeals);
+		lastMonthInfo.sortedSets.push(...companyInfo[i].lastMonthDealsAndSets.sortedSets);
+		lastMonthInfo.revenueGenerated += companyInfo[i].lastMonthDealsAndSets.revenueGenerated;
+		lastMonthInfo.salesWon.push(...companyInfo[i].lastMonthDealsAndSets.salesWon);
+		lastWeekInfo.sortedDeals.push(...companyInfo[i].lastWeekDealsAndSets.sortedDeals);
+		lastWeekInfo.sortedSets.push(...companyInfo[i].lastWeekDealsAndSets.sortedSets);
+		lastWeekInfo.revenueGenerated += companyInfo[i].lastWeekDealsAndSets.revenueGenerated;
+		lastWeekInfo.salesWon.push(...companyInfo[i].lastWeekDealsAndSets.salesWon);
+		thisMonthInfo.sortedDeals.push(...companyInfo[i].thisMonthDealsAndSets.sortedDeals);
+		thisMonthInfo.sortedSets.push(...companyInfo[i].thisMonthDealsAndSets.sortedSets);
+		thisMonthInfo.revenueGenerated += companyInfo[i].thisMonthDealsAndSets.revenueGenerated;
+		thisMonthInfo.salesWon.push(...companyInfo[i].thisMonthDealsAndSets.salesWon);
+	}
+
+	lastMonthInfo.averageSale = lastMonthInfo.revenueGenerated / lastMonthInfo.salesWon.length;
+	lastWeekInfo.averageSale = lastWeekInfo.revenueGenerated / lastWeekInfo.salesWon.length;
+	thisMonthInfo.averageSale = thisMonthInfo.revenueGenerated / thisMonthInfo.salesWon.length;
+
+	let dealsForExtraData = lastMonthInfo.sortedDeals.concat(thisMonthInfo.sortedDeals);
+
+	let setsForExtraData = lastMonthInfo.sortedSets.concat(thisMonthInfo.sortedSets);
+
+	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
+
+	res.json([lastMonthInfo, lastWeekInfo, thisMonthInfo, extraData]);
+};
+
+const getCompanyData = async () => {
+	let accessToken = await Token.getAccessToken();
+	let { usersEndPoint } = await getUsersName();
+	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+	let { data: deals1 } = await dealsResponse1.json();
+
+	let dealsResponse2 = await fetch(
+		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=2`,
+		{
+			headers: {
+				"Authorization": `Zoho-oauthtoken ${accessToken}`
+			}
+		}
+	);
+	let { data: deals2 } = await dealsResponse2.json();
+
+	let dealsResponse3 = await fetch(
+		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=3`,
+		{
+			headers: {
+				"Authorization": `Zoho-oauthtoken ${accessToken}`
+			}
+		}
+	);
+	let { data: deals3 } = await dealsResponse3.json();
+
+	let setsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let { data: sets1 } = await setsResponse1.json();
+
+	let setsResponse2 = await fetch(
+		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
+		{
+			headers: {
+				"Authorization": `Zoho-oauthtoken ${accessToken}`
+			}
+		}
+	);
+
+	let { data: sets2 } = await setsResponse2.json();
+
+	let setsResponse3 = await fetch(
+		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
+		{
+			headers: {
+				"Authorization": `Zoho-oauthtoken ${accessToken}`
+			}
+		}
+	);
+
+	let { data: sets3 } = await setsResponse3.json();
+
+	let deals = deals1.concat(deals2).concat(deals3);
+
+	let sets = sets1.concat(sets2).concat(sets3);
+
+	return {
+		companyDeals: deals,
+		companySets: sets,
+		usersEndPoint
+	};
 };
 
 const getNationData = async nation => {
@@ -231,6 +384,48 @@ const getDealsAndSales = async (deals, sets, name) => {
 		lastMonthDealsAndSets,
 		lastWeekDealsAndSets,
 		thisMonthDealsAndSets
+	};
+};
+
+const getExtraSetAndDealData = (deals, sets) => {
+	function sortUnique(arr) {
+		var a = [],
+			b = [],
+			prev;
+
+		arr.sort();
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] !== prev) {
+				a.push(arr[i]);
+				b.push(1);
+			} else {
+				b[b.length - 1]++;
+			}
+			prev = arr[i];
+		}
+
+		return [a, b];
+	}
+
+	let projectType = sets.map(set => {
+		return set.Project_Type;
+	});
+
+	let productsInvolved = deals.map(deal => {
+		return deal.Products_Involved;
+	});
+
+	productsInvolved = [].concat.apply([], productsInvolved); // flattens array
+
+	let sortedProjectType = sortUnique(projectType);
+	let sortedProductsInvolved = sortUnique(productsInvolved);
+
+	console.log(sortedProjectType);
+	console.log(sortedProductsInvolved);
+
+	return {
+		sortedProjectType,
+		sortedProductsInvolved
 	};
 };
 
@@ -433,5 +628,6 @@ module.exports = {
 	getDesigner,
 	getNation,
 	getUsers,
+	getCompany,
 	Login
 };
