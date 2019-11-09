@@ -11,20 +11,15 @@ const getDesigner = async (req, res) => {
 
 	let designerInfo = await getDealsAndSales(deals, sets, name);
 
-	let dealsForExtraData = designerInfo.lastMonthDealsAndSets.sortedDeals.concat(
-		designerInfo.thisMonthDealsAndSets.sortedDeals
-	);
-
-	let setsForExtraData = designerInfo.lastMonthDealsAndSets.sortedSets.concat(
-		designerInfo.thisMonthDealsAndSets.sortedSets
-	);
+	let dealsForExtraData = designerInfo.lastWeekDealsAndSets.salesWon;
+	let setsForExtraData = designerInfo.lastWeekDealsAndSets.sortedSets;
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
 
 	res.json([
+		designerInfo.thisMonthDealsAndSets,
 		designerInfo.lastMonthDealsAndSets,
 		designerInfo.lastWeekDealsAndSets,
-		designerInfo.thisMonthDealsAndSets,
 		extraData
 	]);
 };
@@ -78,13 +73,12 @@ const getNation = async (req, res) => {
 	lastWeekInfo.averageSale = lastWeekInfo.revenueGenerated / lastWeekInfo.salesWon.length;
 	thisMonthInfo.averageSale = thisMonthInfo.revenueGenerated / thisMonthInfo.salesWon.length;
 
-	let dealsForExtraData = lastMonthInfo.sortedDeals.concat(thisMonthInfo.sortedDeals);
-
-	let setsForExtraData = lastMonthInfo.sortedSets.concat(thisMonthInfo.sortedSets);
+	let dealsForExtraData = lastWeekInfo.salesWon;
+	let setsForExtraData = lastWeekInfo.sortedSets;
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
 
-	res.json([lastMonthInfo, lastWeekInfo, thisMonthInfo, extraData]);
+	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
 };
 
 const getUsers = async (req, res) => {
@@ -164,13 +158,12 @@ const getCompany = async (req, res) => {
 	lastWeekInfo.averageSale = lastWeekInfo.revenueGenerated / lastWeekInfo.salesWon.length;
 	thisMonthInfo.averageSale = thisMonthInfo.revenueGenerated / thisMonthInfo.salesWon.length;
 
-	let dealsForExtraData = lastMonthInfo.sortedDeals.concat(thisMonthInfo.sortedDeals);
-
-	let setsForExtraData = lastMonthInfo.sortedSets.concat(thisMonthInfo.sortedSets);
+	let dealsForExtraData = lastWeekInfo.salesWon;
+	let setsForExtraData = lastWeekInfo.sortedSets;
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
 
-	res.json([lastMonthInfo, lastWeekInfo, thisMonthInfo, extraData]);
+	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
 };
 
 const getCompanyData = async () => {
@@ -344,6 +337,7 @@ const getUsersName = async nation => {
 			filteredUsers.push(users[i].full_name);
 		}
 	}
+
 	return filteredUsers;
 };
 
@@ -419,9 +413,6 @@ const getExtraSetAndDealData = (deals, sets) => {
 
 	let sortedProjectType = sortUnique(projectType);
 	let sortedProductsInvolved = sortUnique(productsInvolved);
-
-	console.log(sortedProjectType);
-	console.log(sortedProductsInvolved);
 
 	return {
 		sortedProjectType,

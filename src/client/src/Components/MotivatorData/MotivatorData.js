@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Spinner from "../../public/spinner.gif";
 import Logo from "../../public/logo.png";
 
-let times = ["Last Month", "Last Week", "This Month"];
+let times = ["This Month", "Last Month", "Last Week"];
 let extraDataTitle = ["Products Involved", "Customer Source"];
 
 const MotivatorData = ({
@@ -126,9 +126,9 @@ const MotivatorData = ({
 
 		for (let i = 0; i < productsInvolved[0].length; i++) {
 			productsInvolvedView.push(
-				<div className="boxWrap">
+				<div key={i} className="boxWrap">
 					<div className="box">
-						<h5 className="dataTitle">{productsInvolved[0][i]}</h5>
+						<h6 className="dataTitle">{productsInvolved[0][i]}</h6>
 						<div className="amount">{productsInvolved[1][i]}</div>
 					</div>
 				</div>
@@ -137,8 +137,8 @@ const MotivatorData = ({
 
 		for (let i = 0; i < customerSource[0].length; i++) {
 			customerSourceView.push(
-				<div className="box">
-					<h5 className="dataTitle">{customerSource[0][i]}</h5>
+				<div key={i} className="box">
+					<h6 className="dataTitle">{customerSource[0][i]}</h6>
 					<div className="amount">{customerSource[1][i]}</div>
 				</div>
 			);
@@ -147,38 +147,39 @@ const MotivatorData = ({
 		viewData = (
 			<div className="my-3">
 				<img src={Logo} alt="Image"></img>
+				<h1>{currentSelected}</h1>
 				{salesData.map((data, index) => {
 					return (
 						<div key={index}>
 							<h3>{times[index]}</h3>
 							<div className="boxWrap">
 								<div className="box">
-									<h5 className="dataTitle">Sets Created</h5>
+									<h6 className="dataTitle">Sets Created</h6>
 									<div className="amount">{data.sortedSets.length}</div>
 								</div>
 								<div className="box">
-									<h5 className="dataTitle">Deals Created</h5>
+									<h6 className="dataTitle">Deals Created</h6>
 									<div className="amount">{data.sortedDeals.length}</div>
 								</div>
 								<div className="box">
-									<h5 className="dataTitle">Revenue Generated</h5>
+									<h6 className="dataTitle">Revenue Generated</h6>
 									<div className="amount">${Math.trunc(data.revenueGenerated).toLocaleString()}</div>
 								</div>
 								<div className="box">
-									<h5 className="dataTitle">Sales Won</h5>
+									<h6 className="dataTitle">Sales Won</h6>
 									<div className="amount">{data.salesWon.length}</div>
 								</div>
 								<div className="box">
-									<h5 className="dataTitle">Average Sale</h5>
+									<h6 className="dataTitle">Average Sale</h6>
 									<div className="amount">${Math.trunc(data.averageSale).toLocaleString()}</div>
 								</div>
 							</div>
 						</div>
 					);
 				})}
-				<h3>Products Involved Last And This Month</h3>
+				<h3>Products Sold Last Week</h3>
 				<div className="boxWrap">{productsInvolvedView}</div>
-				<h3>Customer Source Involved Last And This Month</h3>
+				<h3>Customer Source Last Week</h3>
 
 				<div className="boxWrap">{customerSourceView}</div>
 			</div>

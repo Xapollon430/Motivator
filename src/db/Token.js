@@ -5,12 +5,12 @@ dotenv.config();
 
 mongoose.set("useCreateIndex", true);
 
-mongoose.connect(`${process.env.MONGODB_TOKEN_CONNECTION_STRING}`, {
+mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, {
 	useUnifiedTopology: true,
 	useNewUrlParser: true
 });
 
-mongoose.connect(`${process.env.MONGODB_JWT_CONNECTION_STRING}`, {
+mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, {
 	useUnifiedTopology: true,
 	useNewUrlParser: true
 });
