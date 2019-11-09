@@ -44,6 +44,7 @@ function App() {
 					updateExtraData={updateExtraData}
 				/>
 			</div>
+
 			<span className="deciLogo">
 				Powered by <a href="https://decidigital.com/"> Deci Digital</a>
 			</span>
