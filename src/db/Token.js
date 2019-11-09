@@ -28,7 +28,8 @@ let jwtTokenSchema = new mongoose.Schema({
 
 let accessTokenSchema = new mongoose.Schema({
 	accessToken: {
-		type: String
+		type: String,
+		required: true
 	},
 	expireAt: {
 		type: Date,
