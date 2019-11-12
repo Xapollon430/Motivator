@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "production") {
       path.resolve(__dirname, "src", "client", "build", "index.html")
     );
   });
-  keepAwake("https://ucsdashboard.herokuapp.com/designer");
+  keepAwake("https://ucsdashboard.herokuapp.com/");
 }
 app.listen(PORT, () => {
   console.log("server started");
