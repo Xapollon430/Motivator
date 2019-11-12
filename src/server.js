@@ -4,6 +4,7 @@ const Router = require("./routes/routes");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
+const keepAwake = require("./keepAwake");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -13,11 +14,14 @@ app.use(cors());
 app.use(Router);
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static("./src/client/build"));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "src", "client", "build", "index.html"));
-	});
+  app.use(express.static("./src/client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "src", "client", "build", "index.html")
+    );
+  });
+  keepAwake("https://ucsdashboard.herokuapp.com/designer");
 }
 app.listen(PORT, () => {
-	console.log("server started");
+  console.log("server started");
 });
