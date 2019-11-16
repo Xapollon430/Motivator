@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
-	let [designers, updateDesigners] = useState(false);
+	let [designers, updateDesigners] = useState(null);
 	let [nations, updateNations] = useState(null);
 	let [salesData, updateSalesData] = useState(null);
 	let [currentSelected, updateCurrentSelected] = useState("");
