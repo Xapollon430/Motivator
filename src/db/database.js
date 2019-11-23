@@ -135,7 +135,7 @@ const createSales = async () => {
 	let { data: sets2 } = await setsResponse2.json();
 
 	let setsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
+		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=3`,
 		{
 			headers: {
 				"Authorization": `Zoho-oauthtoken ${accessToken}`

@@ -177,7 +177,6 @@ const getCompany = async (req, res) => {
 };
 
 const getCompanyData = async () => {
-	let accessToken = await DB.getAccessToken();
 	let { usersEndPoint } = await getUsersName();
 	let { deals, sets } = await DB.getSales();
 
@@ -189,7 +188,6 @@ const getCompanyData = async () => {
 };
 
 const getNationData = async nation => {
-	let accessToken = await DB.getAccessToken();
 	let filteredUsers = await getUsersName(nation);
 	let { deals, sets } = await DB.getSales();
 
