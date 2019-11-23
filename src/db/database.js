@@ -115,6 +115,13 @@ const createSales = async () => {
 	);
 	let { data: deals3 } = await dealsResponse3.json();
 
+	let dealsResponse4 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+	let { data: deals4 } = await dealsResponse4.json();
+
 	let setsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
 		headers: {
 			"Authorization": `Zoho-oauthtoken ${accessToken}`
@@ -145,9 +152,26 @@ const createSales = async () => {
 
 	let { data: sets3 } = await setsResponse3.json();
 
-	let deals = deals1.concat(deals2).concat(deals3);
+	let setsResponse4 = await fetch(
+		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=3`,
+		{
+			headers: {
+				"Authorization": `Zoho-oauthtoken ${accessToken}`
+			}
+		}
+	);
 
-	let sets = sets1.concat(sets2).concat(sets3);
+	let { data: sets4 } = await setsResponse4.json();
+
+	let deals = deals1
+		.concat(deals2)
+		.concat(deals3)
+		.concat(deals4);
+
+	let sets = sets1
+		.concat(sets2)
+		.concat(sets3)
+		.concat(sets4);
 
 	return { deals, sets };
 };
