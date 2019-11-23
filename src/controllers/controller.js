@@ -1,9 +1,11 @@
-const Token = require("../db/Token");
+const DB = require("../db/database");
 const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
 
 let monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 let monthsWith30Days = [4, 6, 9, 11];
+
+const cacheSales = () => {};
 
 const getDesigner = async (req, res) => {
 	let { name } = req.query;
@@ -78,13 +80,18 @@ const getNation = async (req, res) => {
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
 
+	for (let i = 0; i < lastMonthInfo.salesWon.length; i++) {
+		if (lastMonthInfo.salesWon[i].Owner.name === "David Kara") {
+			console.log(lastMonthInfo.salesWon[i].Closing_Date);
+		}
+	}
+
 	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
 };
 
 const getUsers = async (req, res) => {
 	let { usersEndPoint, nationsEndPoint } = await getUsersName();
 	nationsEndPoint.unshift("Company");
-
 	res.json({
 		usersEndPoint,
 		nationsEndPoint
@@ -93,6 +100,7 @@ const getUsers = async (req, res) => {
 
 const Login = async (req, res) => {
 	let { username, password } = req.body;
+
 	if (username === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
 		let token = jwt.sign({}, "secret");
 		await Token.jwtToken.create({

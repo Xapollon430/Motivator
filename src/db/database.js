@@ -10,11 +10,6 @@ mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, {
 	useNewUrlParser: true
 });
 
-mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`, {
-	useUnifiedTopology: true,
-	useNewUrlParser: true
-});
-
 let jwtTokenSchema = new mongoose.Schema({
 	jwtToken: {
 		type: String
@@ -38,8 +33,15 @@ let accessTokenSchema = new mongoose.Schema({
 	}
 });
 
+let salesSchema = new mongoose.Schema({
+	sales: {
+		type: Object
+	}
+});
+
 let AccessTokenModel = mongoose.model("accessToken", accessTokenSchema);
 let jwtToken = mongoose.model("jwtToken", jwtTokenSchema);
+let salesModel = mongoose.model("sales", salesSchema);
 
 const createAccessToken = async () => {
 	let tokenResponse = await fetch(
@@ -65,6 +67,32 @@ const getAccessToken = async () => {
 
 	let newCreatedAccessToken = await createAccessToken();
 	return newCreatedAccessToken.accessToken;
+};
+
+const createSales = async () => {
+	let tokenResponse = await fetch(
+		`https://accounts.zoho.com/oauth/v2/token?grant_type=refresh_token&refresh_token=${process.env.REFRESH_TOKEN}&client_secret=${process.env.CLIENT_SECRET}&client_id=${process.env.CLIENT_ID}`,
+		{
+			method: "POST"
+		}
+	);
+	let accessToken = await tokenResponse.json();
+
+	let accessTokenFromDB = AccessTokenModel.create({
+		accessToken: accessToken.access_token
+	});
+
+	return accessTokenFromDB;
+};
+
+const getSales = async () => {
+	let salesFromDB = await salesModel.find();
+	if (salesFromDB) {
+		return salesFromDB;
+	}
+
+	let newCreatedSales = await createSales();
+	return newCreatedSales;
 };
 
 module.exports = {
