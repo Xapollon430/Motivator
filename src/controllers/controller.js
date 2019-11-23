@@ -5,7 +5,10 @@ const jwt = require("jsonwebtoken");
 let monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 let monthsWith30Days = [4, 6, 9, 11];
 
-const cacheSales = () => {};
+const cacheSales = async (req, res) => {
+	await DB.createSales();
+	console.log(123);
+};
 
 const getDesigner = async (req, res) => {
 	let { name } = req.query;
@@ -103,7 +106,7 @@ const Login = async (req, res) => {
 
 	if (username === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
 		let token = jwt.sign({}, "secret");
-		await Token.jwtToken.create({
+		await DB.jwtToken.create({
 			jwtToken: token
 		});
 
@@ -175,7 +178,7 @@ const getCompany = async (req, res) => {
 };
 
 const getCompanyData = async () => {
-	let accessToken = await Token.getAccessToken();
+	let accessToken = await DB.getAccessToken();
 	let { usersEndPoint } = await getUsersName();
 	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
 		headers: {
@@ -246,7 +249,7 @@ const getCompanyData = async () => {
 };
 
 const getNationData = async nation => {
-	let accessToken = await Token.getAccessToken();
+	let accessToken = await DB.getAccessToken();
 	let filteredUsers = await getUsersName(nation);
 	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
 		headers: {
@@ -306,7 +309,7 @@ const getNationData = async nation => {
 };
 
 const getUsersName = async nation => {
-	accessToken = await Token.getAccessToken();
+	accessToken = await DB.getAccessToken();
 	let filteredUsers = [];
 
 	let usersResponse = await fetch(`https://www.zohoapis.com/crm/v2/users?type=ActiveUsers`, {
@@ -350,7 +353,7 @@ const getUsersName = async nation => {
 };
 
 const getDesinerData = async name => {
-	accessToken = await Token.getAccessToken();
+	accessToken = await DB.getAccessToken();
 	let dealsResponse = await fetch(
 		`https://www.zohoapis.com/crm/v2/Deals/search?criteria=(Owner.name.:equals:${name})&sort_order=desc&sort_by=Created_Time`,
 		{
@@ -628,5 +631,6 @@ module.exports = {
 	getNation,
 	getUsers,
 	getCompany,
-	Login
+	Login,
+	cacheSales
 };
