@@ -7,6 +7,9 @@ let monthsWith30Days = [4, 6, 9, 11];
 
 const cacheSales = async (req, res) => {
 	DB.getSales();
+	res.json({
+		"success": "success"
+	});
 };
 
 const getDesigner = async (req, res) => {
@@ -81,12 +84,6 @@ const getNation = async (req, res) => {
 	let setsForExtraData = lastWeekInfo.sortedSets;
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
-
-	for (let i = 0; i < lastMonthInfo.salesWon.length; i++) {
-		if (lastMonthInfo.salesWon[i].Owner.name === "David Kara") {
-			console.log(lastMonthInfo.salesWon[i].Closing_Date);
-		}
-	}
 
 	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
 };

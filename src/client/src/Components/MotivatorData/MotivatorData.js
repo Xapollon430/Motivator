@@ -25,7 +25,7 @@ const MotivatorData = ({
 	useEffect(() => {
 		const getSales = async () => {
 			if (currentSelected === "Company") {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				let salesResponse = await fetch(`http://localhost:5000/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -37,7 +37,7 @@ const MotivatorData = ({
 				updateExtraData(extraData);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -49,7 +49,7 @@ const MotivatorData = ({
 				updateExtraData(extraData);
 				updateSalesData(salesJson);
 			} else {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -75,7 +75,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch("https://ucsdashboard.herokuapp.com/login", {
+		let tokenResponse = await fetch("http://localhost:5000/login", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
