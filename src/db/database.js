@@ -3,6 +3,7 @@ const fetch = require("node-fetch");
 const dotenv = require("dotenv");
 
 let sets;
+let deals;
 
 dotenv.config();
 
@@ -36,13 +37,8 @@ let accessTokenSchema = new mongoose.Schema({
 	}
 });
 
-let salesSchema = new mongoose.Schema({
-	data: [{}]
-});
-
 let AccessTokenModel = mongoose.model("accessToken", accessTokenSchema);
 let jwtToken = mongoose.model("jwtToken", jwtTokenSchema);
-let salesModel = mongoose.model("sales", salesSchema);
 
 const createAccessToken = async () => {
 	let tokenResponse = await fetch(
@@ -71,13 +67,22 @@ const getAccessToken = async () => {
 };
 
 const getSales = async () => {
-	let salesFromDB = await salesModel.find();
-	if (salesFromDB) {
-		return salesFromDB;
+	if (sets && deals) {
+		return {
+			deals,
+			sets
+		};
 	}
 
-	let newCreatedSales = await createSales();
-	return newCreatedSales;
+	let salesData = await createSales();
+
+	sets = salesData.sets;
+	deals = salesData.deals;
+
+	return {
+		deals,
+		sets
+	};
 };
 
 const createSales = async () => {
@@ -144,13 +149,11 @@ const createSales = async () => {
 
 	let sets = sets1.concat(sets2).concat(sets3);
 
-	console.log(sets);
-
-	salesModel.create(sets);
+	return { deals, sets };
 };
 
 module.exports = {
 	getAccessToken,
 	jwtToken,
-	createSales
+	getSales
 };

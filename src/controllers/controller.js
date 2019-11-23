@@ -6,8 +6,7 @@ let monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 let monthsWith30Days = [4, 6, 9, 11];
 
 const cacheSales = async (req, res) => {
-	await DB.createSales();
-	console.log(123);
+	DB.getSales();
 };
 
 const getDesigner = async (req, res) => {
@@ -180,66 +179,7 @@ const getCompany = async (req, res) => {
 const getCompanyData = async () => {
 	let accessToken = await DB.getAccessToken();
 	let { usersEndPoint } = await getUsersName();
-	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
-		headers: {
-			"Authorization": `Zoho-oauthtoken ${accessToken}`
-		}
-	});
-	let { data: deals1 } = await dealsResponse1.json();
-
-	let dealsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals2 } = await dealsResponse2.json();
-
-	let dealsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=3`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals3 } = await dealsResponse3.json();
-
-	let setsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
-		headers: {
-			"Authorization": `Zoho-oauthtoken ${accessToken}`
-		}
-	});
-
-	let { data: sets1 } = await setsResponse1.json();
-
-	let setsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-
-	let { data: sets2 } = await setsResponse2.json();
-
-	let setsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-
-	let { data: sets3 } = await setsResponse3.json();
-
-	let deals = deals1.concat(deals2).concat(deals3);
-
-	let sets = sets1.concat(sets2).concat(sets3);
+	let { deals, sets } = await DB.getSales();
 
 	return {
 		companyDeals: deals,
@@ -251,55 +191,7 @@ const getCompanyData = async () => {
 const getNationData = async nation => {
 	let accessToken = await DB.getAccessToken();
 	let filteredUsers = await getUsersName(nation);
-	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
-		headers: {
-			"Authorization": `Zoho-oauthtoken ${accessToken}`
-		}
-	});
-	let { data: deals1 } = await dealsResponse1.json();
-
-	let dealsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals2 } = await dealsResponse2.json();
-
-	let dealsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=3`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals3 } = await dealsResponse3.json();
-
-	let setsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
-		headers: {
-			"Authorization": `Zoho-oauthtoken ${accessToken}`
-		}
-	});
-
-	let { data: sets1 } = await setsResponse1.json();
-
-	let setsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-
-	let { data: sets2 } = await setsResponse2.json();
-
-	let deals = deals1.concat(deals2).concat(deals3);
-
-	let sets = sets1.concat(sets2);
+	let { deals, sets } = await DB.getSales();
 
 	return {
 		nationDeals: deals,
