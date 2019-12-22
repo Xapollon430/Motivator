@@ -8,6 +8,5 @@ Router.get("/nation", auth, Controller.getNation);
 Router.get("/users", auth, Controller.getUsers);
 Router.get("/company", auth, Controller.getCompany);
 Router.post("/login", Controller.Login);
-Router.post("/cacheSales", Controller.cacheSales);
 
 module.exports = Router;

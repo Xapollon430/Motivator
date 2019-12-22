@@ -4,7 +4,9 @@ const Router = require("./routes/routes");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
+const DB = require("./db/database");
 
+DB.getSales();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
