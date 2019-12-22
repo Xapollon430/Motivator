@@ -67,14 +67,12 @@ const getAccessToken = async () => {
 };
 
 const getSales = async () => {
-	//caching the sales
 	if (sets && deals) {
 		return {
 			deals,
 			sets
 		};
 	}
-
 	let salesData = await createSales();
 
 	sets = salesData.sets;
@@ -87,6 +85,7 @@ const getSales = async () => {
 };
 
 const createSales = async () => {
+	console.log("Started");
 	let accessToken = await getAccessToken();
 
 	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
@@ -165,17 +164,6 @@ const createSales = async () => {
 
 	let { data: sets2 } = await setsResponse2.json();
 
-	let setsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=3`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-
-	let { data: sets3 } = await setsResponse3.json();
-
 	let deals = deals1
 		.concat(deals2)
 		.concat(deals3)
@@ -183,7 +171,8 @@ const createSales = async () => {
 		.concat(deals5)
 		.concat(deals6);
 
-	let sets = sets1.concat(sets2).concat(sets3);
+	let sets = sets1.concat(sets2);
+	console.log("ended");
 
 	return { deals, sets };
 };

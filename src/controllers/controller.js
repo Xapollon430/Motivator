@@ -8,7 +8,7 @@ let monthsWith30Days = [4, 6, 9, 11];
 
 const getDesigner = async (req, res) => {
 	let { name } = req.query;
-	let { deals, sets } = await DB.getSales(name);
+	let { deals, sets } = await DB.getSales();
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = getDealsAndSales(deals, sets, name);
 
@@ -59,9 +59,11 @@ const getCompany = async (req, res) => {
 	let { usersEndPoint } = await getUsersName();
 	let { deals, sets } = await DB.getSales();
 
+	console.log(usersEndPoint);
+
 	let salesInfo = [];
 
-	for (let i = 0; i < filteredUsers.length; i++) {
+	for (let i = 0; i < usersEndPoint.length; i++) {
 		salesInfo.push(await getDealsAndSales(deals, sets, usersEndPoint[i]));
 	}
 
