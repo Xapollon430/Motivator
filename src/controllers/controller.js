@@ -12,10 +12,6 @@ const getDesigner = async (req, res) => {
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = getDealsAndSales(deals, sets, name);
 
-	let { thisMonthInfo } = designerInfo;
-	let { lastMonthInfo } = designerInfo;
-	let { lastWeekInfo } = designerInfo;
-
 	let salesWonForProductsSold = lastWeekInfo.salesWon;
 	let setsForCustomerSource = lastWeekInfo.sortedSets;
 
