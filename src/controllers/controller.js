@@ -18,17 +18,16 @@ const getDesigner = async (req, res) => {
 
 	let designerInfo = await getDealsAndSales(deals, sets, name);
 
+	let { thisMonthInfo } = designerInfo;
+	let { lastMonthInfo } = designerInfo;
+	let { lastWeekInfo } = designerInfo;
+
 	let dealsForExtraData = designerInfo.lastWeekDealsAndSets.salesWon;
 	let setsForExtraData = designerInfo.lastWeekDealsAndSets.sortedSets;
 
 	let extraData = getExtraSetAndDealData(dealsForExtraData, setsForExtraData);
 
-	res.json([
-		designerInfo.thisMonthDealsAndSets,
-		designerInfo.lastMonthDealsAndSets,
-		designerInfo.lastWeekDealsAndSets,
-		extraData
-	]);
+	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
 };
 
 const getNation = async (req, res) => {

@@ -55,6 +55,7 @@ const MotivatorData = ({
 					}
 				});
 				let salesJson = await salesResponse.json();
+				console.log(salesJson);
 				let extraData = salesJson.splice(3, 1);
 
 				updateExtraData(extraData);
