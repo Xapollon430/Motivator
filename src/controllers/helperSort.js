@@ -21,19 +21,19 @@ const sortData = salesInfo => {
 		averageSale: 0
 	};
 
-	for (let i = 0; i < nationInfo.length; i++) {
-		lastMonthInfo.sortedDeals.push(...nationInfo[i].lastMonthDealsAndSets.sortedDeals);
-		lastMonthInfo.sortedSets.push(...nationInfo[i].lastMonthDealsAndSets.sortedSets);
-		lastMonthInfo.revenueGenerated += nationInfo[i].lastMonthDealsAndSets.revenueGenerated;
-		lastMonthInfo.salesWon.push(...nationInfo[i].lastMonthDealsAndSets.salesWon);
-		lastWeekInfo.sortedDeals.push(...nationInfo[i].lastWeekDealsAndSets.sortedDeals);
-		lastWeekInfo.sortedSets.push(...nationInfo[i].lastWeekDealsAndSets.sortedSets);
-		lastWeekInfo.revenueGenerated += nationInfo[i].lastWeekDealsAndSets.revenueGenerated;
-		lastWeekInfo.salesWon.push(...nationInfo[i].lastWeekDealsAndSets.salesWon);
-		thisMonthInfo.sortedDeals.push(...nationInfo[i].thisMonthDealsAndSets.sortedDeals);
-		thisMonthInfo.sortedSets.push(...nationInfo[i].thisMonthDealsAndSets.sortedSets);
-		thisMonthInfo.revenueGenerated += nationInfo[i].thisMonthDealsAndSets.revenueGenerated;
-		thisMonthInfo.salesWon.push(...nationInfo[i].thisMonthDealsAndSets.salesWon);
+	for (let i = 0; i < salesInfo.length; i++) {
+		lastMonthInfo.sortedDeals.push(...salesInfo[i].lastMonthInfo.sortedDeals);
+		lastMonthInfo.sortedSets.push(...salesInfo[i].lastMonthInfo.sortedSets);
+		lastMonthInfo.revenueGenerated += salesInfo[i].lastMonthInfo.revenueGenerated;
+		lastMonthInfo.salesWon.push(...salesInfo[i].lastMonthInfo.salesWon);
+		lastWeekInfo.sortedDeals.push(...salesInfo[i].lastMonthInfo.sortedDeals);
+		lastWeekInfo.sortedSets.push(...salesInfo[i].lastWeekInfo.sortedSets);
+		lastWeekInfo.revenueGenerated += salesInfo[i].lastWeekInfo.revenueGenerated;
+		lastWeekInfo.salesWon.push(...salesInfo[i].lastWeekInfo.salesWon);
+		thisMonthInfo.sortedDeals.push(...salesInfo[i].thisMonthInfo.sortedDeals);
+		thisMonthInfo.sortedSets.push(...salesInfo[i].thisMonthInfo.sortedSets);
+		thisMonthInfo.revenueGenerated += salesInfo[i].thisMonthInfo.revenueGenerated;
+		thisMonthInfo.salesWon.push(...salesInfo[i].thisMonthInfo.salesWon);
 	}
 
 	lastMonthInfo.averageSale = lastMonthInfo.revenueGenerated / lastMonthInfo.salesWon.length;

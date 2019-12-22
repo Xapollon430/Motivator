@@ -8,7 +8,7 @@ let monthsWith30Days = [4, 6, 9, 11];
 
 const getDesigner = async (req, res) => {
 	let { name } = req.query;
-	let { deals, sets } = await getDesinerData(name);
+	let { deals, sets } = await DB.getSales(name);
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = getDealsAndSales(deals, sets, name);
 
@@ -25,14 +25,15 @@ const getDesigner = async (req, res) => {
 
 const getNation = async (req, res) => {
 	let { name } = req.query;
-	let { nationDeals, nationSets, filteredUsers } = await getNationData(name);
-	let salesInfo = [];
+	let { deals, sets } = await DB.getSales();
+	let filteredUsers = await getUsersName(name);
+	let nationSalesInfo = [];
 
 	for (let i = 0; i < filteredUsers.length; i++) {
-		salesInfo.push(await getDealsAndSales(nationDeals, nationSets, filteredUsers[i]));
+		nationSalesInfo.push(await getDealsAndSales(deals, sets, filteredUsers[i]));
 	}
 
-	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = sortData(salesInfo);
+	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = sortData(nationSalesInfo);
 
 	let salesWonForProductsSold = lastWeekInfo.salesWon;
 	let setsForCustomerSource = lastWeekInfo.sortedSets;
@@ -55,21 +56,26 @@ const getUsers = async (req, res) => {
 };
 
 const getCompany = async (req, res) => {
-	let { companyDeals, companySets, usersEndPoint } = await getCompanyData();
+	let { usersEndPoint } = await getUsersName();
+	let { deals, sets } = await DB.getSales();
+
 	let salesInfo = [];
 
 	for (let i = 0; i < filteredUsers.length; i++) {
-		salesInfo.push(await getDealsAndSales(companyDeals, companySets, usersEndPoint[i]));
+		salesInfo.push(await getDealsAndSales(deals, sets, usersEndPoint[i]));
 	}
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = sortData(salesInfo);
 
-	let dealsForExtraData = lastWeekInfo.salesWon;
-	let setsForExtraData = lastWeekInfo.sortedSets;
+	let salesWonForProductsSold = lastWeekInfo.salesWon;
+	let setsForCustomerSource = lastWeekInfo.sortedSets;
 
-	let weeklyProductsAndCustomerSource = getWeeklyProductsAndCustomerSource(dealsForExtraData, setsForExtraData);
+	let weeklyProductsAndCustomerSource = getWeeklyProductsAndCustomerSource(
+		salesWonForProductsSold,
+		setsForCustomerSource
+	);
 
-	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, extraData]);
+	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, weeklyProductsAndCustomerSource]);
 };
 
 const Login = async (req, res) => {
@@ -89,28 +95,6 @@ const Login = async (req, res) => {
 			error: `Wrong username or password`
 		});
 	}
-};
-
-const getCompanyData = async () => {
-	let { usersEndPoint } = await getUsersName();
-	let { deals, sets } = await DB.getSales();
-
-	return {
-		companyDeals: deals,
-		companySets: sets,
-		usersEndPoint
-	};
-};
-
-const getNationData = async nation => {
-	let filteredUsers = await getUsersName(nation);
-	let { deals, sets } = await DB.getSales();
-
-	return {
-		nationDeals: deals,
-		nationSets: sets,
-		filteredUsers
-	};
 };
 
 const getUsersName = async nation => {
@@ -157,42 +141,13 @@ const getUsersName = async nation => {
 	return filteredUsers;
 };
 
-const getDesinerData = async name => {
-	accessToken = await DB.getAccessToken();
-	let dealsResponse = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals/search?criteria=(Owner.name.:equals:${name})&sort_order=desc&sort_by=Created_Time`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals } = await dealsResponse.json();
-
-	let setsResponse = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts/search?criteria=(Owner.name.:equals:${name})&sort_order=desc&sort_by=Created_Time`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-
-	let { data: sets } = await setsResponse.json();
-
-	return {
-		deals,
-		sets
-	};
-};
-
 const getDealsAndSales = (deals, sets, name) => {
-	let thisMonthInfo = getLastMonthDealsAndSets(deals, sets, name);
-	let lastMonthInfo = getLastWeekDealsAndSets(deals, sets, name);
-	let lastWeekInfo = getThisMonthDealsAndSets(deals, sets, name);
+	let thisMonthInfo = getThisMonthDealsAndSets(deals, sets, name);
+	let lastMonthInfo = getLastMonthDealsAndSets(deals, sets, name);
+	let lastWeekInfo = getLastWeekDealsAndSets(deals, sets, name);
 	return {
-		thisMonthInfo,
 		lastMonthInfo,
+		thisMonthInfo,
 		lastWeekInfo
 	};
 };
