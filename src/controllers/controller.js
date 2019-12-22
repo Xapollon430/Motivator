@@ -156,6 +156,7 @@ const getDealsAndSales = (deals, sets, name) => {
 
 const getWeeklyProductsAndCustomerSource = (deals, sets) => {
 	function sortUnique(arr) {
+		//https://stackoverflow.com/questions/5667888/counting-the-occurrences-frequency-of-array-elements
 		var a = [],
 			b = [],
 			prev;
