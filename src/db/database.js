@@ -67,6 +67,7 @@ const getAccessToken = async () => {
 };
 
 const getSales = async () => {
+	//caching the sales
 	if (sets && deals) {
 		return {
 			deals,
