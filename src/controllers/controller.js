@@ -10,7 +10,7 @@ const getDesigner = async (req, res) => {
 	let { name } = req.query;
 	let { deals, sets } = await getDesinerData(name);
 
-	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = await getDealsAndSales(deals, sets, name);
+	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = getDealsAndSales(deals, sets, name);
 
 	let salesWonForProductsSold = lastWeekInfo.salesWon;
 	let setsForCustomerSource = lastWeekInfo.sortedSets;
@@ -186,7 +186,7 @@ const getDesinerData = async name => {
 	};
 };
 
-const getDealsAndSales = async (deals, sets, name) => {
+const getDealsAndSales = (deals, sets, name) => {
 	let thisMonthInfo = getLastMonthDealsAndSets(deals, sets, name);
 	let lastMonthInfo = getLastWeekDealsAndSets(deals, sets, name);
 	let lastWeekInfo = getThisMonthDealsAndSets(deals, sets, name);
