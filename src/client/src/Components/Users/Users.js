@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-
+import { updateDesigners, updateCurrentSelected, updateNations, updateLoading } from "../../Store/actions";
+import { connect } from "react-redux";
 const Users = ({
 	designers,
 	currentSelected,
@@ -11,19 +12,18 @@ const Users = ({
 }) => {
 	useEffect(() => {
 		const getUsers = async () => {
-			if (loggedIn) {
-				let usersResponse = await fetch("https://ucsdashboard.herokuapp.com/users", {
-					headers: {
-						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
-					}
-				});
-				let users = await usersResponse.json();
-				updateNations(users.nationsEndPoint);
-				updateDesigners(users);
-			}
+			let usersResponse = await fetch("http://localhost:5000/users", {
+				headers: {
+					"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
+				}
+			});
+			let users = await usersResponse.json();
+			updateNations(users.nationsEndPoint);
+			updateDesigners(users);
 		};
-
-		getUsers();
+		if (loggedIn) {
+			getUsers();
+		}
 	}, [loggedIn]);
 
 	const updateCurrentSelectedAndSpinner = event => {
@@ -61,4 +61,36 @@ const Users = ({
 	);
 };
 
-export default Users;
+const mapStateToProps = state => {
+	return {
+		currentSelected: state.currentSelected,
+		loggedIn: state.loggedIn,
+		designers: state.designers
+	};
+};
+
+const mapDispatchToProps = dispatch => {
+	return {
+		updateCurrentSelected: selected => {
+			dispatch(updateCurrentSelected(selected));
+		},
+		updateNations: nations => {
+			dispatch(updateNations(nations));
+		},
+		updateDesigners: designers => {
+			dispatch(updateDesigners(designers));
+		},
+		updateLoading: bool => {
+			dispatch(updateLoading(bool));
+		}
+	};
+};
+// designers={designers}
+// 						currentSelected={currentSelected}
+// 						updateCurrentSelected={updateCurrentSelected}
+// 						updateDesigners={updateDesigners}
+// 						updateNations={updateNations}
+// 						updateLoading={updateLoading}
+// 						loggedIn={loggedIn}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

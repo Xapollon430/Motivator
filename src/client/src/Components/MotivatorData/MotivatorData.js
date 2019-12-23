@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import Spinner from "../../public/spinner.gif";
 import Logo from "../../public/logo.png";
-
+import { connect } from "react-redux";
+import {
+	updateLoggedIn,
+	updateSalesData,
+	updateLoading,
+	updateLoginFail,
+	updateWeeklyProductAndCustomerSource
+} from "../../Store/actions";
 let times = ["This Month", "Last Month", "Last Week"];
-let extraDataTitle = ["Products Involved", "Customer Source"];
-
 const MotivatorData = ({
-	updateLogin,
 	currentSelected,
 	updateSalesData,
 	salesData,
@@ -14,10 +18,11 @@ const MotivatorData = ({
 	loading,
 	updateLoading,
 	loginFail,
-	loginFailUpdate,
 	loggedIn,
-	updateExtraData,
-	extraData
+	updateWeeklyProductAndCustomerSource,
+	updateLoggedIn,
+	updateLoginFail,
+	weeklyProductAndCustomerSource
 }) => {
 	let loginError = null;
 	let viewData = null;
@@ -25,40 +30,40 @@ const MotivatorData = ({
 	useEffect(() => {
 		const getSales = async () => {
 			if (currentSelected === "Company") {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				let salesResponse = await fetch(`http://localhost:5000/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let extraData = salesJson.splice(3, 1);
+				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
 
-				updateExtraData(extraData);
+				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let extraData = salesJson.splice(3, 1);
+				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
 
-				updateExtraData(extraData);
+				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let extraData = salesJson.splice(3, 1);
+				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
 
-				updateExtraData(extraData);
+				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			}
 			updateLoading(false);
@@ -76,23 +81,22 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch("https://ucsdashboard.herokuapp.com/login", {
+		let tokenResponse = await fetch("http://localhost:5000/login", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
 			body: data
 		});
 		if (tokenResponse.status === 400) {
-			loginFailUpdate(true);
+			updateLoginFail(true);
 		} else {
 			let token = await tokenResponse.json();
 			let localStorageToken = JSON.stringify(token.token);
 			localStorage.setItem("jwtToken", localStorageToken);
-			updateLogin(true);
-			loginFailUpdate(true);
+			updateLoggedIn(true);
+			updateLoginFail(false);
 		}
 	};
-
 	if (loginFail) {
 		loginError = (
 			<div className="alert alert-danger mt-2 error" role="alert">
@@ -120,8 +124,8 @@ const MotivatorData = ({
 	} else if (loading) {
 		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
-		let productsInvolved = extraData[0].sortedProductsInvolved;
-		let customerSource = extraData[0].sortedProjectType;
+		let productsInvolved = weeklyProductAndCustomerSource[0].sortedProductsInvolved;
+		let customerSource = weeklyProductAndCustomerSource[0].sortedProjectType;
 		let productsInvolvedView = [];
 		let customerSourceView = [];
 
@@ -181,7 +185,6 @@ const MotivatorData = ({
 				<h3>Products Sold Last Week</h3>
 				<div className="boxWrap">{productsInvolvedView}</div>
 				<h3>Customer Source Last Week</h3>
-
 				<div className="boxWrap">{customerSourceView}</div>
 			</div>
 		);
@@ -189,4 +192,30 @@ const MotivatorData = ({
 	return viewData;
 };
 
-export default MotivatorData;
+const MapStateToProps = state => {
+	return {
+		currentSelected: state.currentSelected,
+		salesData: state.salesData,
+		nations: state.nations,
+		loading: state.loading,
+		loginFail: state.loginFail,
+		loggedIn: state.loggedIn,
+		weeklyProductAndCustomerSource: state.weeklyProductAndCustomerSource
+	};
+};
+
+const MapDispatchToProps = dispatch => {
+	return {
+		updateLoggedIn: bool => dispatch(updateLoggedIn(bool)),
+		updateSalesData: salesData => {
+			dispatch(updateSalesData(salesData));
+		},
+		updateLoading: bool => dispatch(updateLoading(bool)),
+		updateLoginFail: bool => {
+			dispatch(updateLoginFail(bool));
+		},
+		updateWeeklyProductAndCustomerSource: data => dispatch(updateWeeklyProductAndCustomerSource(data))
+	};
+};
+
+export default connect(MapStateToProps, MapDispatchToProps)(MotivatorData);
