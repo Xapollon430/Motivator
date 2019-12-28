@@ -85,12 +85,5 @@ const mapDispatchToProps = dispatch => {
 		}
 	};
 };
-// designers={designers}
-// 						currentSelected={currentSelected}
-// 						updateCurrentSelected={updateCurrentSelected}
-// 						updateDesigners={updateDesigners}
-// 						updateNations={updateNations}
-// 						updateLoading={updateLoading}
-// 						loggedIn={loggedIn}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

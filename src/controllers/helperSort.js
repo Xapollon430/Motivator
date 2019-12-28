@@ -26,7 +26,7 @@ const sortData = salesInfo => {
 		lastMonthInfo.sortedSets.push(...salesInfo[i].lastMonthInfo.sortedSets);
 		lastMonthInfo.revenueGenerated += salesInfo[i].lastMonthInfo.revenueGenerated;
 		lastMonthInfo.salesWon.push(...salesInfo[i].lastMonthInfo.salesWon);
-		lastWeekInfo.sortedDeals.push(...salesInfo[i].lastMonthInfo.sortedDeals);
+		lastWeekInfo.sortedDeals.push(...salesInfo[i].lastWeekInfo.sortedDeals);
 		lastWeekInfo.sortedSets.push(...salesInfo[i].lastWeekInfo.sortedSets);
 		lastWeekInfo.revenueGenerated += salesInfo[i].lastWeekInfo.revenueGenerated;
 		lastWeekInfo.salesWon.push(...salesInfo[i].lastWeekInfo.salesWon);

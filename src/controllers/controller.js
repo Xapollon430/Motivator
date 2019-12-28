@@ -42,7 +42,7 @@ const getNation = async (req, res) => {
 		salesWonForProductsSold,
 		setsForCustomerSource
 	);
-
+	console.log(lastMonthInfo, lastWeekInfo);
 	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, weeklyProductsAndCustomerSource]);
 };
 
