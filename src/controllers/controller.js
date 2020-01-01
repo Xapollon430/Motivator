@@ -12,8 +12,8 @@ const getDesigner = async (req, res) => {
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = getDealsAndSales(deals, sets, name);
 
-	let salesWonForProductsSold = lastWeekInfo.salesWon;
-	let setsForCustomerSource = lastWeekInfo.sortedSets;
+	let salesWonForProductsSold = lastMonthInfo.salesWon;
+	let setsForCustomerSource = lastMonthInfo.sortedSets;
 
 	let weeklyProductsAndCustomerSource = getWeeklyProductsAndCustomerSource(
 		salesWonForProductsSold,
@@ -35,8 +35,8 @@ const getNation = async (req, res) => {
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = sortData(nationSalesInfo);
 
-	let salesWonForProductsSold = lastWeekInfo.salesWon;
-	let setsForCustomerSource = lastWeekInfo.sortedSets;
+	let salesWonForProductsSold = lastMonthInfo.salesWon;
+	let setsForCustomerSource = lastMonthInfo.sortedSets;
 
 	let weeklyProductsAndCustomerSource = getWeeklyProductsAndCustomerSource(
 		salesWonForProductsSold,
@@ -66,8 +66,8 @@ const getCompany = async (req, res) => {
 
 	let { thisMonthInfo, lastMonthInfo, lastWeekInfo } = sortData(salesInfo);
 
-	let salesWonForProductsSold = lastWeekInfo.salesWon;
-	let setsForCustomerSource = lastWeekInfo.sortedSets;
+	let salesWonForProductsSold = lastMonthInfo.salesWon;
+	let setsForCustomerSource = lastMonthInfo.sortedSets;
 
 	let weeklyProductsAndCustomerSource = getWeeklyProductsAndCustomerSource(
 		salesWonForProductsSold,

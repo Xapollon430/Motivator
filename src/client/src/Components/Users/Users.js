@@ -42,8 +42,18 @@ const Users = ({
 		navDesigners = null;
 	} else if (designers) {
 		let allUsers = [];
+		/* https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript	*/
+		let designersSorted = designers.usersEndPoint.sort(function(a, b) {
+			if (a < b) {
+				return -1;
+			}
+			if (a > b) {
+				return 1;
+			}
+			return 0;
+		});
 		allUsers.push(...designers.nationsEndPoint);
-		allUsers.push(...designers.usersEndPoint);
+		allUsers.push(...designersSorted);
 		navDesigners = allUsers.map((designer, index) => {
 			return designer === currentSelected ? (
 				<div key={index} className="designerName currentDesigner">
