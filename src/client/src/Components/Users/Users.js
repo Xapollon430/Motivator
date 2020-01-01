@@ -15,7 +15,7 @@ const Users = ({
 }) => {
 	useEffect(() => {
 		const getUsers = async () => {
-			let usersResponse = await fetch(`${URL}/users`, {
+			let usersResponse = await fetch(`https://ucsdashboard.herokuapp.com/users`, {
 				headers: {
 					"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 				}
