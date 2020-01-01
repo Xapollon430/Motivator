@@ -42,7 +42,6 @@ const getNation = async (req, res) => {
 		salesWonForProductsSold,
 		setsForCustomerSource
 	);
-	console.log(lastMonthInfo, lastWeekInfo);
 	res.json([thisMonthInfo, lastMonthInfo, lastWeekInfo, weeklyProductsAndCustomerSource]);
 };
 
@@ -58,8 +57,6 @@ const getUsers = async (req, res) => {
 const getCompany = async (req, res) => {
 	let { usersEndPoint } = await getUsersName();
 	let { deals, sets } = await DB.getSales();
-
-	console.log(usersEndPoint);
 
 	let salesInfo = [];
 
@@ -202,8 +199,8 @@ const getLastMonthDealsAndSets = (deals, sets, name) => {
 	let averageSale = 0;
 
 	if (dateNow.getUTCMonth() === 0) {
-		beginningLastMonth = new Date(`${dateNow.getUTCFullYear()}-12-01`);
-		endLastMonth = new Date(`${dateNow.getUTCFullYear()}-12-31`);
+		beginningLastMonth = new Date(`${dateNow.getUTCFullYear() - 1}-12-01`);
+		endLastMonth = new Date(`${dateNow.getUTCFullYear() - 1}-12-31`);
 	} else if (dateNow.getUTCMonth() === 2) {
 		endLastMonth = new Date(`${dateNow.getUTCFullYear()}-02-28`);
 	} else if (monthsWith30Days.includes(dateNow.getUTCMonth())) {

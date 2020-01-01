@@ -10,6 +10,7 @@ import {
 	updateWeeklyProductAndCustomerSource
 } from "../../Store/actions";
 let times = ["This Month", "Last Month", "Last Week"];
+let URL = process.env.REACT_APP_ENDPOINT;
 const MotivatorData = ({
 	currentSelected,
 	updateSalesData,
@@ -30,7 +31,7 @@ const MotivatorData = ({
 	useEffect(() => {
 		const getSales = async () => {
 			if (currentSelected === "Company") {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				let salesResponse = await fetch(`${URL}/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -42,7 +43,7 @@ const MotivatorData = ({
 				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`${URL}/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -54,7 +55,7 @@ const MotivatorData = ({
 				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`${URL}/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -81,7 +82,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch("https://ucsdashboard.herokuapp.com/login", {
+		let tokenResponse = await fetch(`${URL}/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
