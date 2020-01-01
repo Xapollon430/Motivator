@@ -183,9 +183,9 @@ const MotivatorData = ({
 						</div>
 					);
 				})}
-				<h3>Products Sold Last Week</h3>
+				<h3>Products Sold Last Month</h3>
 				<div className="boxWrap">{productsInvolvedView}</div>
-				<h3>Customer Source Last Week</h3>
+				<h3>Customer Source Last Month</h3>
 				<div className="boxWrap">{customerSourceView}</div>
 			</div>
 		);
