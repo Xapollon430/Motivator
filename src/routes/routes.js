@@ -8,5 +8,6 @@ Router.get("/nation", auth, Controller.getNation);
 Router.get("/users", auth, Controller.getUsers);
 Router.get("/company", auth, Controller.getCompany);
 Router.post("/login", Controller.Login);
+Router.post("/email", Controller.Email);
 
 module.exports = Router;

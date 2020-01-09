@@ -6,7 +6,7 @@ const sortData = salesInfo => {
 		salesWon: [],
 		averageSale: 0
 	};
-	let lastWeekInfo = {
+	let lastYearThisMonth = {
 		sortedSets: [],
 		sortedDeals: [],
 		revenueGenerated: 0,
@@ -26,10 +26,10 @@ const sortData = salesInfo => {
 		lastMonthInfo.sortedSets.push(...salesInfo[i].lastMonthInfo.sortedSets);
 		lastMonthInfo.revenueGenerated += salesInfo[i].lastMonthInfo.revenueGenerated;
 		lastMonthInfo.salesWon.push(...salesInfo[i].lastMonthInfo.salesWon);
-		lastWeekInfo.sortedDeals.push(...salesInfo[i].lastWeekInfo.sortedDeals);
-		lastWeekInfo.sortedSets.push(...salesInfo[i].lastWeekInfo.sortedSets);
-		lastWeekInfo.revenueGenerated += salesInfo[i].lastWeekInfo.revenueGenerated;
-		lastWeekInfo.salesWon.push(...salesInfo[i].lastWeekInfo.salesWon);
+		lastYearThisMonth.sortedDeals.push(...salesInfo[i].lastYearThisMonth.sortedDeals);
+		lastYearThisMonth.sortedSets.push(...salesInfo[i].lastYearThisMonth.sortedSets);
+		lastYearThisMonth.revenueGenerated += salesInfo[i].lastYearThisMonth.revenueGenerated;
+		lastYearThisMonth.salesWon.push(...salesInfo[i].lastYearThisMonth.salesWon);
 		thisMonthInfo.sortedDeals.push(...salesInfo[i].thisMonthInfo.sortedDeals);
 		thisMonthInfo.sortedSets.push(...salesInfo[i].thisMonthInfo.sortedSets);
 		thisMonthInfo.revenueGenerated += salesInfo[i].thisMonthInfo.revenueGenerated;
@@ -37,13 +37,13 @@ const sortData = salesInfo => {
 	}
 
 	lastMonthInfo.averageSale = lastMonthInfo.revenueGenerated / lastMonthInfo.salesWon.length;
-	lastWeekInfo.averageSale = lastWeekInfo.revenueGenerated / lastWeekInfo.salesWon.length;
+	lastYearThisMonth.averageSale = lastYearThisMonth.revenueGenerated / lastYearThisMonth.salesWon.length;
 	thisMonthInfo.averageSale = thisMonthInfo.revenueGenerated / thisMonthInfo.salesWon.length;
 
 	return {
 		thisMonthInfo,
 		lastMonthInfo,
-		lastWeekInfo
+		lastYearThisMonth
 	};
 };
 

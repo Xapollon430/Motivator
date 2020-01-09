@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { updateDesigners, updateCurrentSelected, updateNations, updateLoading } from "../../Store/actions";
 import { connect } from "react-redux";
-
-let URL = process.env.REACT_APP_ENDPOINT;
+let dateNow = new Date();
 
 const Users = ({
 	designers,
@@ -15,7 +14,7 @@ const Users = ({
 }) => {
 	useEffect(() => {
 		const getUsers = async () => {
-			let usersResponse = await fetch(`https://ucsdashboard.herokuapp.com/users`, {
+			let usersResponse = await fetch(`https://ucsdashboard.herokuapp.com//users`, {
 				headers: {
 					"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 				}
@@ -66,14 +65,12 @@ const Users = ({
 			);
 		});
 	}
-
 	return (
 		<div className="sideNav" onClick={event => updateCurrentSelectedAndSpinner(event)}>
 			{navDesigners}
 		</div>
 	);
 };
-
 const mapStateToProps = state => {
 	return {
 		currentSelected: state.currentSelected,

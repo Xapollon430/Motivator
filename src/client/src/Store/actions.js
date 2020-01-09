@@ -41,6 +41,14 @@ export const updateLoginFail = loginFail => {
 		payload: loginFail
 	};
 };
+
+export const updateThisMonthProductAndCustomerSource = thisMonthProductAndCustomerSource => {
+	return {
+		type: "UPDATE_THIS_MONTH_PRODUCT_AND_CUSTOMER_SOURCE",
+		payload: thisMonthProductAndCustomerSource
+	};
+};
+
 export const updateWeeklyProductAndCustomerSource = weeklyProductAndCustomerSource => {
 	return {
 		type: "UPDATE_WEEKLY_PRODUCT_AND_CUSTOMER_SOURCE",

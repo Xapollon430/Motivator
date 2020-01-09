@@ -8,7 +8,8 @@ const initialState = {
 	loading: false,
 	loggedIn: false,
 	loginFail: false,
-	weeklyProductAndCustomerSource: ""
+	weeklyProductAndCustomerSource: "",
+	thisMonthProductAndCustomerSource: ""
 };
 
 const reducer = (state = initialState, action) => {
@@ -29,6 +30,8 @@ const reducer = (state = initialState, action) => {
 			return { ...state, loginFail: action.payload };
 		case "UPDATE_WEEKLY_PRODUCT_AND_CUSTOMER_SOURCE":
 			return { ...state, weeklyProductAndCustomerSource: action.payload };
+		case "UPDATE_THIS_MONTH_PRODUCT_AND_CUSTOMER_SOURCE":
+			return { ...state, thisMonthProductAndCustomerSource: action.payload };
 		default:
 			return { ...state };
 	}

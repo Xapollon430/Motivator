@@ -7,10 +7,12 @@ import {
 	updateSalesData,
 	updateLoading,
 	updateLoginFail,
-	updateWeeklyProductAndCustomerSource
+	updateWeeklyProductAndCustomerSource,
+	updateThisMonthProductAndCustomerSource
 } from "../../Store/actions";
-let times = ["This Month", "Last Month", "Last Week"];
-let URL = process.env.REACT_APP_ENDPOINT;
+let times = ["This Month", "Last Month", "Last Year This Month"];
+let dateNow = new Date();
+
 const MotivatorData = ({
 	currentSelected,
 	updateSalesData,
@@ -23,7 +25,9 @@ const MotivatorData = ({
 	updateWeeklyProductAndCustomerSource,
 	updateLoggedIn,
 	updateLoginFail,
-	weeklyProductAndCustomerSource
+	weeklyProductAndCustomerSource,
+	updateThisMonthProductAndCustomerSource,
+	thisMonthProductAndCustomerSource
 }) => {
 	let loginError = null;
 	let viewData = null;
@@ -31,7 +35,7 @@ const MotivatorData = ({
 	useEffect(() => {
 		const getSales = async () => {
 			if (currentSelected === "Company") {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com//company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -39,11 +43,13 @@ const MotivatorData = ({
 				let salesJson = await salesResponse.json();
 
 				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
+				let thisMonthProductAndCustomerSource = salesJson.splice(3, 1);
 
 				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
+				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com//nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -55,7 +61,7 @@ const MotivatorData = ({
 				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com//designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -74,6 +80,25 @@ const MotivatorData = ({
 		}
 	}, [currentSelected]);
 
+	const handleEmailSubmit = async event => {
+		event.preventDefault();
+		let email = document.querySelector("#email").value;
+		let year = document.querySelector("#year").value;
+		let month = document.querySelector("#month").value;
+
+		let dateRequested = `${year}-${month}-1`;
+		let data = JSON.stringify({
+			dateRequested,
+			email
+		});
+		await fetch(`https://ucsdashboard.herokuapp.com//email`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			mode: "cors",
+			body: data
+		});
+	};
+
 	const handleSubmit = async event => {
 		event.preventDefault();
 		let username = document.querySelector(".username").value;
@@ -82,7 +107,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch(`https://ucsdashboard.herokuapp.com/login`, {
+		let tokenResponse = await fetch(`https://ucsdashboard.herokuapp.com//login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
@@ -109,7 +134,7 @@ const MotivatorData = ({
 	if (!loggedIn) {
 		viewData = (
 			<form className="loginForm" onSubmit={e => handleSubmit(e)}>
-				<h1>Welcome UCS Tuesday Meeting!</h1>
+				<h1>Welcome to UCS Dashboard!</h1>
 				<div className="form-group">
 					<input type="text" className="form-control username" placeholder="Username" />
 				</div>
@@ -129,6 +154,10 @@ const MotivatorData = ({
 		let customerSource = weeklyProductAndCustomerSource[0].sortedProjectType;
 		let productsInvolvedView = [];
 		let customerSourceView = [];
+		let productsInvolved2 = thisMonthProductAndCustomerSource[0].sortedProductsInvolved;
+		let customerSource2 = thisMonthProductAndCustomerSource[0].sortedProjectType;
+		let productsInvolvedView2 = [];
+		let customerSourceView2 = [];
 
 		for (let i = 0; i < productsInvolved[0].length; i++) {
 			productsInvolvedView.push(
@@ -150,10 +179,56 @@ const MotivatorData = ({
 			);
 		}
 
+		for (let i = 0; i < productsInvolved2[0].length; i++) {
+			productsInvolvedView2.push(
+				<div key={i} className="boxWrap">
+					<div className="box">
+						<h6 className="dataTitle">{productsInvolved2[0][i]}</h6>
+						<div className="amount">{productsInvolved2[1][i]}</div>
+					</div>
+				</div>
+			);
+		}
+
+		for (let i = 0; i < customerSource2[0].length; i++) {
+			customerSourceView2.push(
+				<div key={i} className="box">
+					<h6 className="dataTitle">{customerSource2[0][i]}</h6>
+					<div className="amount">{customerSource2[1][i]}</div>
+				</div>
+			);
+		}
+
 		viewData = (
 			<div className="my-3">
 				<img src={Logo} alt="Image"></img>
-				<h1>{currentSelected}</h1>
+				{currentSelected === "Company" && (
+					<form className="emailForm" onSubmit={e => handleEmailSubmit(e)}>
+						<input id="email" placeholder="Email" type="text" />
+						<select id="year">
+							<option value={dateNow.getUTCFullYear()}>{dateNow.getUTCFullYear()}</option>
+							<option value={dateNow.getUTCFullYear() - 1}>{dateNow.getUTCFullYear() - 1}</option>
+						</select>
+						<select id="month">
+							<option value="01">January</option>
+							<option value="02">February </option>
+							<option value="03">March</option>
+							<option value="04">April</option>
+							<option value="05">May</option>
+							<option value="06">June</option>
+							<option value="07">July</option>
+							<option value="08">August</option>
+							<option value="09">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
+						<button type="submit" className="btn btn-primary btn-sm">
+							Submit
+						</button>
+					</form>
+				)}
+
 				{salesData.map((data, index) => {
 					return (
 						<div key={index}>
@@ -187,9 +262,18 @@ const MotivatorData = ({
 				<div className="boxWrap">{productsInvolvedView}</div>
 				<h3>Customer Source Last Month</h3>
 				<div className="boxWrap">{customerSourceView}</div>
+				{currentSelected === "Company" && (
+					<React.Fragment>
+						<h3>Products Sold This Month</h3>
+						<div className="boxWrap">{productsInvolvedView2}</div>
+						<h3>Customer Source This Month</h3>
+						<div className="boxWrap">{customerSourceView2}</div>
+					</React.Fragment>
+				)}
 			</div>
 		);
 	}
+
 	return viewData;
 };
 
@@ -201,7 +285,8 @@ const MapStateToProps = state => {
 		loading: state.loading,
 		loginFail: state.loginFail,
 		loggedIn: state.loggedIn,
-		weeklyProductAndCustomerSource: state.weeklyProductAndCustomerSource
+		weeklyProductAndCustomerSource: state.weeklyProductAndCustomerSource,
+		thisMonthProductAndCustomerSource: state.thisMonthProductAndCustomerSource
 	};
 };
 
@@ -215,7 +300,8 @@ const MapDispatchToProps = dispatch => {
 		updateLoginFail: bool => {
 			dispatch(updateLoginFail(bool));
 		},
-		updateWeeklyProductAndCustomerSource: data => dispatch(updateWeeklyProductAndCustomerSource(data))
+		updateWeeklyProductAndCustomerSource: data => dispatch(updateWeeklyProductAndCustomerSource(data)),
+		updateThisMonthProductAndCustomerSource: data => dispatch(updateThisMonthProductAndCustomerSource(data))
 	};
 };
 

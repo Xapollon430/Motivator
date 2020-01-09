@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const fetch = require("node-fetch");
 const dotenv = require("dotenv");
 
-let sets;
-let deals;
+const deals = [];
+const sets = [];
 
 dotenv.config();
 
@@ -67,16 +67,13 @@ const getAccessToken = async () => {
 };
 
 const getSales = async () => {
-	if (sets && deals) {
+	if (sets.length > 0 && deals.length > 0) {
 		return {
 			deals,
 			sets
 		};
 	}
-	let salesData = await createSales();
-
-	sets = salesData.sets;
-	deals = salesData.deals;
+	await createSales();
 
 	return {
 		deals,
@@ -85,94 +82,168 @@ const getSales = async () => {
 };
 
 const createSales = async () => {
-	console.log("Started");
 	let accessToken = await getAccessToken();
-
-	let dealsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
-		headers: {
-			"Authorization": `Zoho-oauthtoken ${accessToken}`
-		}
-	});
-	let { data: deals1 } = await dealsResponse1.json();
-
-	let dealsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals2 } = await dealsResponse2.json();
-
-	let dealsResponse3 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=3`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals3 } = await dealsResponse3.json();
-
-	let dealsResponse4 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=4`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals4 } = await dealsResponse4.json();
-
-	let dealsResponse5 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=5`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals5 } = await dealsResponse5.json();
-
-	let dealsResponse6 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=6`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
-		}
-	);
-	let { data: deals6 } = await dealsResponse6.json();
-
-	let setsResponse1 = await fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
+	console.log("Started");
+	let dealsResponse1 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`, {
 		headers: {
 			"Authorization": `Zoho-oauthtoken ${accessToken}`
 		}
 	});
 
-	let { data: sets1 } = await setsResponse1.json();
-
-	let setsResponse2 = await fetch(
-		`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`,
-		{
-			headers: {
-				"Authorization": `Zoho-oauthtoken ${accessToken}`
-			}
+	let dealsResponse2 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=2`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
 		}
-	);
+	});
 
-	let { data: sets2 } = await setsResponse2.json();
+	let dealsResponse3 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=3`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
 
-	let deals = deals1
-		.concat(deals2)
-		.concat(deals3)
-		.concat(deals4)
-		.concat(deals5)
-		.concat(deals6);
+	let dealsResponse4 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=4`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
 
-	let sets = sets1.concat(sets2);
-	console.log("ended");
+	let dealsResponse5 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=5`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let dealsResponse6 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=6`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let dealsResponse7 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=7`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let dealsResponse8 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=8`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse1 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse2 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=2`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse3 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=3`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse4 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=4`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse5 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=5`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse6 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=6`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse7 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=7`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse8 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=8`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse9 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=9`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse10 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=10`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse11 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=11`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	let setsResponse12 = fetch(`https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=12`, {
+		headers: {
+			"Authorization": `Zoho-oauthtoken ${accessToken}`
+		}
+	});
+
+	await Promise.all([
+		dealsResponse1,
+		dealsResponse2,
+		dealsResponse3,
+		dealsResponse4,
+		dealsResponse5,
+		dealsResponse6,
+		dealsResponse7,
+		dealsResponse8
+	])
+		.then(responses => {
+			return Promise.all(responses.map(r => r.json()));
+		})
+		.then(responses => {
+			responses.map(r => deals.push(...r.data));
+		});
+
+	await Promise.all([
+		setsResponse1,
+		setsResponse2,
+		setsResponse3,
+		setsResponse4,
+		setsResponse5,
+		setsResponse6,
+		setsResponse7,
+		setsResponse8,
+		setsResponse9,
+		setsResponse10,
+		setsResponse11,
+		setsResponse12
+	])
+		.then(responses => {
+			return Promise.all(responses.map(r => r.json()));
+		})
+		.then(responses => {
+			responses.map(r => {
+				sets.push(...r.data);
+			});
+		});
+	console.log("Ended");
 
 	return { deals, sets };
 };
