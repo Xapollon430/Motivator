@@ -8,7 +8,9 @@ import {
 	updateLoading,
 	updateLoginFail,
 	updateWeeklyProductAndCustomerSource,
-	updateThisMonthProductAndCustomerSource
+	updateThisMonthProductAndCustomerSource,
+	updateShowSpecificMonth,
+	updateSpecificMonth
 } from "../../Store/actions";
 let times = ["This Month", "Last Month", "Last Year This Month"];
 let dateNow = new Date();
@@ -27,15 +29,20 @@ const MotivatorData = ({
 	updateLoginFail,
 	weeklyProductAndCustomerSource,
 	updateThisMonthProductAndCustomerSource,
-	thisMonthProductAndCustomerSource
+	thisMonthProductAndCustomerSource,
+	updateShowSpecificMonth,
+	updateSpecificMonth,
+	showSpecificMonth,
+	specificMonth
 }) => {
 	let loginError = null;
 	let viewData = null;
-
 	useEffect(() => {
 		const getSales = async () => {
 			if (currentSelected === "Company") {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				updateShowSpecificMonth(false);
+
+				let salesResponse = await fetch(`http://localhost:5000/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -49,7 +56,9 @@ const MotivatorData = ({
 				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				updateShowSpecificMonth(false);
+
+				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -61,7 +70,9 @@ const MotivatorData = ({
 				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else {
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				updateShowSpecificMonth(false);
+
+				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -82,21 +93,24 @@ const MotivatorData = ({
 
 	const handleEmailSubmit = async event => {
 		event.preventDefault();
-		let email = document.querySelector("#email").value;
 		let year = document.querySelector("#year").value;
 		let month = document.querySelector("#month").value;
 
 		let dateRequested = `${year}-${month}-1`;
 		let data = JSON.stringify({
-			dateRequested,
-			email
+			dateRequested
 		});
-		await fetch(`https://ucsdashboard.herokuapp.com/email`, {
+		let specificMonthlyResponse = await fetch(`http://localhost:5000/email`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
 			body: data
 		});
+
+		let monthlyData = await specificMonthlyResponse.json();
+		updateSpecificMonth(monthlyData);
+
+		updateShowSpecificMonth(true);
 	};
 
 	const handleSubmit = async event => {
@@ -107,7 +121,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch(`https://ucsdashboard.herokuapp.com/login`, {
+		let tokenResponse = await fetch(`http://localhost:5000/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
@@ -212,7 +226,6 @@ const MotivatorData = ({
 				<img src={Logo} alt="Image"></img>
 				{currentSelected === "Company" && (
 					<form className="emailForm" onSubmit={e => handleEmailSubmit(e)}>
-						<input id="email" placeholder="Email" type="text" />
 						<select id="year">
 							<option value={dateNow.getUTCFullYear()}>{dateNow.getUTCFullYear()}</option>
 							<option value={dateNow.getUTCFullYear() - 1}>{dateNow.getUTCFullYear() - 1}</option>
@@ -280,6 +293,96 @@ const MotivatorData = ({
 				)}
 			</div>
 		);
+
+		if (showSpecificMonth === true) {
+			let monthCustomerSourceView = [];
+			let monthProductsInvolvedView = [];
+			let customerSource = specificMonth.splice(5, 1)[0];
+			let productsInvolved = specificMonth.splice(5, 1)[0];
+
+			let customerSourceKeys = Object.keys(customerSource);
+			let productsInvolvedKeys = Object.keys(productsInvolved);
+
+			let key = 0;
+			for (let source in customerSource) {
+				monthCustomerSourceView.push(
+					<div className="box" key={key}>
+						<h6 className="dataTitle">{customerSourceKeys[key]}</h6>
+						<div className="amount">{customerSource[source]}</div>
+					</div>
+				);
+				key++;
+			}
+			key = 0;
+			for (let product in productsInvolved) {
+				monthProductsInvolvedView.push(
+					<div className="box" key={key}>
+						<h6 className="dataTitle">{productsInvolvedKeys[key]}</h6>
+						<div className="amount">{productsInvolved[product]}</div>
+					</div>
+				);
+				key++;
+			}
+
+			viewData = (
+				<React.Fragment>
+					<div className="my-3">
+						<img src={Logo} alt="Image"></img>
+						{currentSelected === "Company" && (
+							<form className="emailForm" onSubmit={e => handleEmailSubmit(e)}>
+								<select id="year">
+									<option value={dateNow.getUTCFullYear()}>{dateNow.getUTCFullYear()}</option>
+									<option value={dateNow.getUTCFullYear() - 1}>{dateNow.getUTCFullYear() - 1}</option>
+								</select>
+								<select id="month">
+									<option value="01">January</option>
+									<option value="02">February </option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								<button type="submit" className="btn btn-primary btn-sm">
+									Submit
+								</button>
+							</form>
+						)}
+						<div className="boxWrap">
+							<div className="box">
+								<h6 className="dataTitle">Sets Created</h6>
+								<div className="amount">{specificMonth[0].length}</div>
+							</div>
+							<div className="box">
+								<h6 className="dataTitle">Deals Created</h6>
+								<div className="amount">{specificMonth[1].length}</div>
+							</div>
+							<div className="box">
+								<h6 className="dataTitle">Revenue Generated</h6>
+								<div className="amount">${Math.trunc(specificMonth[2]).toLocaleString()}</div>
+							</div>
+							<div className="box">
+								<h6 className="dataTitle">Sales Won</h6>
+								<div className="amount">{specificMonth[3].length}</div>
+							</div>
+							<div className="box">
+								<h6 className="dataTitle">Average Sale</h6>
+								<div className="amount">${Math.trunc(specificMonth[4]).toLocaleString()}</div>
+							</div>
+						</div>
+					</div>
+					<h3>Products Sold</h3>
+					<div className="boxWrap">{monthProductsInvolvedView}</div>
+					<h3>Customer Source </h3>
+					<div className="boxWrap">{monthCustomerSourceView}</div>
+				</React.Fragment>
+			);
+		}
 	}
 
 	return viewData;
@@ -294,7 +397,9 @@ const MapStateToProps = state => {
 		loginFail: state.loginFail,
 		loggedIn: state.loggedIn,
 		weeklyProductAndCustomerSource: state.weeklyProductAndCustomerSource,
-		thisMonthProductAndCustomerSource: state.thisMonthProductAndCustomerSource
+		thisMonthProductAndCustomerSource: state.thisMonthProductAndCustomerSource,
+		showSpecificMonth: state.showSpecificMonth,
+		specificMonth: state.specificMonth
 	};
 };
 
@@ -307,6 +412,12 @@ const MapDispatchToProps = dispatch => {
 		updateLoading: bool => dispatch(updateLoading(bool)),
 		updateLoginFail: bool => {
 			dispatch(updateLoginFail(bool));
+		},
+		updateShowSpecificMonth: bool => {
+			dispatch(updateShowSpecificMonth(bool));
+		},
+		updateSpecificMonth: data => {
+			dispatch(updateSpecificMonth(data));
 		},
 		updateWeeklyProductAndCustomerSource: data => dispatch(updateWeeklyProductAndCustomerSource(data)),
 		updateThisMonthProductAndCustomerSource: data => dispatch(updateThisMonthProductAndCustomerSource(data))

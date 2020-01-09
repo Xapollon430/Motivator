@@ -42,6 +42,20 @@ export const updateLoginFail = loginFail => {
 	};
 };
 
+export const updateSpecificMonth = specificMonth => {
+	return {
+		type: "UPDATE_SPECIFIC_MONTH",
+		payload: specificMonth
+	};
+};
+
+export const updateShowSpecificMonth = showSpecificMonth => {
+	return {
+		type: "UPDATE_SHOW_SPECIFIC_MONTH",
+		payload: showSpecificMonth
+	};
+};
+
 export const updateThisMonthProductAndCustomerSource = thisMonthProductAndCustomerSource => {
 	return {
 		type: "UPDATE_THIS_MONTH_PRODUCT_AND_CUSTOMER_SOURCE",

@@ -2,25 +2,9 @@ const DB = require("../db/database");
 const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
 const sortData = require("./helperSort");
-const xlsx = require("xlsx");
-const nodemailer = require("nodemailer");
 
 let monthsWith31Days = [1, 3, 5, 7, 8, 10, 12];
 let monthsWith30Days = [4, 6, 9, 11];
-const monthNames = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December"
-];
 
 const getDesigner = async (req, res) => {
 	let { name } = req.query;
@@ -669,7 +653,7 @@ const getThisMonthDealsAndSets = (deals, sets, name) => {
 };
 
 const Email = async (req, res) => {
-	let { email, dateRequested } = req.body;
+	let { dateRequested } = req.body;
 	let beginningMonth = new Date(dateRequested);
 	let endMonth = monthsWith31Days.includes(beginningMonth.getUTCMonth() + 1)
 		? new Date(`${beginningMonth.getUTCFullYear()}-${beginningMonth.getUTCMonth() + 1}-31`)
@@ -704,48 +688,7 @@ const Email = async (req, res) => {
 		sourceIndex++;
 	}
 
-	let excelObject = [
-		{
-			Date: `${monthNames[beginningMonth.getUTCMonth()]}-${beginningMonth.getUTCFullYear()}`,
-			Deals: sortedDeals.length,
-			Sets: sortedSets.length,
-			Revenue: revenueGenerated,
-			Average_Sale: averageSale,
-			Sales_Won: salesWon.length,
-			"": ""
-		},
-		ProductObject,
-		SourceObject
-	];
-	// let newWB = xlsx.utils.book_new();
-	// let newWS = xlsx.utils.json_to_sheet(excelObject);
-	// xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
-	// console.log(process.env.EMAIL_NAME);
-	// console.log(process.env.EMAIL_PASS);
-
-	// xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
-	let transporter = nodemailer.createTransport({
-		service: "gmail",
-		auth: {
-			user: "Xapollon430@gmail.com",
-			pass: "Anakonda11+"
-		}
-	});
-
-	let options = {
-		from: "Xapollon430@gmail.com",
-		to: email,
-		subject: "Sales"
-		// attachments: { filename: "Sales.xlsx" }
-	};
-
-	transporter.sendMail(options, (err, data) => {
-		if (err) {
-			console.log(err);
-		} else {
-			data;
-		}
-	});
+	res.json([sortedSets, sortedDeals, revenueGenerated, salesWon, averageSale, ProductObject, SourceObject]);
 };
 module.exports = {
 	getDesigner,

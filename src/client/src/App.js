@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Users from "./Components/Users/Users";
 import MotivatorData from "./Components/MotivatorData/MotivatorData";
 import "bootstrap/dist/css/bootstrap.min.css";
