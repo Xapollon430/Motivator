@@ -692,6 +692,7 @@ const Email = async (req, res) => {
 	let productIndex = 0;
 	let SourceObject = {};
 	let sourceIndex = 0;
+	let x;
 	for (const product in monthProductAndCustomerSource.sortedProductsInvolved[0]) {
 		ProductObject[monthProductAndCustomerSource.sortedProductsInvolved[0][productIndex]] =
 			monthProductAndCustomerSource.sortedProductsInvolved[1][productIndex];
