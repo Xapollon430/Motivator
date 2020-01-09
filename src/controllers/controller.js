@@ -678,9 +678,6 @@ const Email = async (req, res) => {
 	beginningMonth.setUTCHours(0, 0, 0, 0);
 	endMonth.setUTCHours(0, 0, 0, 0);
 
-	console.log(beginningMonth);
-	console.log(endMonth);
-
 	let { sortedSets, sortedDeals, revenueGenerated, salesWon, averageSale } = await getMonthForEmail(
 		beginningMonth,
 		endMonth
@@ -741,13 +738,7 @@ const Email = async (req, res) => {
 		attachments: { filename: "Sales.xlsx" }
 	};
 
-	transporter.sendMail(options, (err, data) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log(data);
-		}
-	});
+	transporter.sendMail(options);
 };
 module.exports = {
 	getDesigner,
