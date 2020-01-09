@@ -154,10 +154,16 @@ const MotivatorData = ({
 		let customerSource = weeklyProductAndCustomerSource[0].sortedProjectType;
 		let productsInvolvedView = [];
 		let customerSourceView = [];
-		let productsInvolved2 = thisMonthProductAndCustomerSource[0].sortedProductsInvolved;
-		let customerSource2 = thisMonthProductAndCustomerSource[0].sortedProjectType;
-		let productsInvolvedView2 = [];
-		let customerSourceView2 = [];
+		let productsInvolved2;
+		let customerSource2;
+		let productsInvolvedView2;
+		let customerSourceView2;
+		if (currentSelected === "Company") {
+			productsInvolved2 = thisMonthProductAndCustomerSource[0].sortedProductsInvolved;
+			customerSource2 = thisMonthProductAndCustomerSource[0].sortedProjectType;
+			productsInvolvedView2 = [];
+			customerSourceView2 = [];
+		}
 
 		for (let i = 0; i < productsInvolved[0].length; i++) {
 			productsInvolvedView.push(
@@ -179,24 +185,26 @@ const MotivatorData = ({
 			);
 		}
 
-		for (let i = 0; i < productsInvolved2[0].length; i++) {
-			productsInvolvedView2.push(
-				<div key={i} className="boxWrap">
-					<div className="box">
-						<h6 className="dataTitle">{productsInvolved2[0][i]}</h6>
-						<div className="amount">{productsInvolved2[1][i]}</div>
+		if (currentSelected === "Company") {
+			for (let i = 0; i < productsInvolved2[0].length; i++) {
+				productsInvolvedView2.push(
+					<div key={i} className="boxWrap">
+						<div className="box">
+							<h6 className="dataTitle">{productsInvolved2[0][i]}</h6>
+							<div className="amount">{productsInvolved2[1][i]}</div>
+						</div>
 					</div>
-				</div>
-			);
-		}
+				);
+			}
 
-		for (let i = 0; i < customerSource2[0].length; i++) {
-			customerSourceView2.push(
-				<div key={i} className="box">
-					<h6 className="dataTitle">{customerSource2[0][i]}</h6>
-					<div className="amount">{customerSource2[1][i]}</div>
-				</div>
-			);
+			for (let i = 0; i < customerSource2[0].length; i++) {
+				customerSourceView2.push(
+					<div key={i} className="box">
+						<h6 className="dataTitle">{customerSource2[0][i]}</h6>
+						<div className="amount">{customerSource2[1][i]}</div>
+					</div>
+				);
+			}
 		}
 
 		viewData = (

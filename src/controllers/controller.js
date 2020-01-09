@@ -720,14 +720,15 @@ const Email = async (req, res) => {
 	let newWB = xlsx.utils.book_new();
 	let newWS = xlsx.utils.json_to_sheet(excelObject);
 	xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
-	let x;
+	console.log(process.env.EMAIL_NAME);
+	console.log(process.env.EMAIL_PASS);
+
 	xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
 	let transporter = nodemailer.createTransport({
 		service: "gmail",
-
 		auth: {
-			user: process.env.EMAIL_USER,
-			pass: process.env.EMAIL_NAME
+			user: process.env.EMAIL_NAME,
+			pass: process.env.EMAIL_PASS
 		}
 	});
 
@@ -738,7 +739,13 @@ const Email = async (req, res) => {
 		attachments: { filename: "Sales.xlsx" }
 	};
 
-	transporter.sendMail(options);
+	transporter.sendMail(options, (err, data) => {
+		if (err) {
+			console.log(err);
+		} else {
+			data;
+		}
+	});
 };
 module.exports = {
 	getDesigner,
