@@ -726,8 +726,8 @@ const Email = async (req, res) => {
 		service: "gmail",
 
 		auth: {
-			user: "Xapollon430@gmail.com",
-			pass: "Anakonda11+"
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_NAME
 		}
 	});
 
