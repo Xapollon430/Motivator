@@ -668,78 +668,78 @@ const getThisMonthDealsAndSets = (deals, sets, name) => {
 	};
 };
 
-// const Email = async (req, res) => {
-// 	let { email, dateRequested } = req.body;
-// 	let beginningMonth = new Date(dateRequested);
-// 	let endMonth = monthsWith31Days.includes(beginningMonth.getUTCMonth() + 1)
-// 		? new Date(`${beginningMonth.getUTCFullYear()}-${beginningMonth.getUTCMonth() + 1}-31`)
-// 		: new Date(`${beginningMonth.getUTCFullYear()}-${beginningMonth.getUTCMonth() + 1}-30`);
+const Email = async (req, res) => {
+	let { email, dateRequested } = req.body;
+	let beginningMonth = new Date(dateRequested);
+	let endMonth = monthsWith31Days.includes(beginningMonth.getUTCMonth() + 1)
+		? new Date(`${beginningMonth.getUTCFullYear()}-${beginningMonth.getUTCMonth() + 1}-31`)
+		: new Date(`${beginningMonth.getUTCFullYear()}-${beginningMonth.getUTCMonth() + 1}-30`);
 
-// 	beginningMonth.setUTCHours(0, 0, 0, 0);
-// 	endMonth.setUTCHours(0, 0, 0, 0);
+	beginningMonth.setUTCHours(0, 0, 0, 0);
+	endMonth.setUTCHours(0, 0, 0, 0);
 
-// 	let { sortedSets, sortedDeals, revenueGenerated, salesWon, averageSale } = await getMonthForEmail(
-// 		beginningMonth,
-// 		endMonth
-// 	);
+	let { sortedSets, sortedDeals, revenueGenerated, salesWon, averageSale } = await getMonthForEmail(
+		beginningMonth,
+		endMonth
+	);
 
-// 	let salesWonForProductsSold = salesWon;
-// 	let setsForCustomerSource = sortedSets;
+	let salesWonForProductsSold = salesWon;
+	let setsForCustomerSource = sortedSets;
 
-// 	let monthProductAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
+	let monthProductAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
 
-// 	let ProductObject = {};
-// 	let productIndex = 0;
-// 	let SourceObject = {};
-// 	let sourceIndex = 0;
-// 	for (const product in monthProductAndCustomerSource.sortedProductsInvolved[0]) {
-// 		ProductObject[monthProductAndCustomerSource.sortedProductsInvolved[0][productIndex]] =
-// 			monthProductAndCustomerSource.sortedProductsInvolved[1][productIndex];
-// 		productIndex++;
-// 	}
+	let ProductObject = {};
+	let productIndex = 0;
+	let SourceObject = {};
+	let sourceIndex = 0;
+	for (const product in monthProductAndCustomerSource.sortedProductsInvolved[0]) {
+		ProductObject[monthProductAndCustomerSource.sortedProductsInvolved[0][productIndex]] =
+			monthProductAndCustomerSource.sortedProductsInvolved[1][productIndex];
+		productIndex++;
+	}
 
-// 	for (const source in monthProductAndCustomerSource.sortedProjectType[0]) {
-// 		SourceObject[monthProductAndCustomerSource.sortedProjectType[0][sourceIndex]] =
-// 			monthProductAndCustomerSource.sortedProjectType[1][sourceIndex];
-// 		sourceIndex++;
-// 	}
+	for (const source in monthProductAndCustomerSource.sortedProjectType[0]) {
+		SourceObject[monthProductAndCustomerSource.sortedProjectType[0][sourceIndex]] =
+			monthProductAndCustomerSource.sortedProjectType[1][sourceIndex];
+		sourceIndex++;
+	}
 
-// 	let excelObject = [
-// 		{
-// 			Date: `${monthNames[beginningMonth.getUTCMonth()]}-${beginningMonth.getUTCFullYear()}`,
-// 			Deals: sortedDeals.length,
-// 			Sets: sortedSets.length,
-// 			Revenue: revenueGenerated,
-// 			Average_Sale: averageSale,
-// 			Sales_Won: salesWon.length,
-// 			"": ""
-// 		},
-// 		ProductObject,
-// 		SourceObject
-// 	];
-// 	let newWB = xlsx.utils.book_new();
-// 	let newWS = xlsx.utils.json_to_sheet(excelObject);
-// 	xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
+	let excelObject = [
+		{
+			Date: `${monthNames[beginningMonth.getUTCMonth()]}-${beginningMonth.getUTCFullYear()}`,
+			Deals: sortedDeals.length,
+			Sets: sortedSets.length,
+			Revenue: revenueGenerated,
+			Average_Sale: averageSale,
+			Sales_Won: salesWon.length,
+			"": ""
+		},
+		ProductObject,
+		SourceObject
+	];
+	let newWB = xlsx.utils.book_new();
+	let newWS = xlsx.utils.json_to_sheet(excelObject);
+	xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
+	let x;
+	xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
+	let transporter = nodemailer.createTransport({
+		service: "gmail",
 
-// 	xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
-// 	let transporter = nodemailer.createTransport({
-// 		service: "gmail",
+		auth: {
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_NAME
+		}
+	});
 
-// 		auth: {
-// 			user: process.env.EMAIL_USER,
-// 			pass: process.env.EMAIL_NAME
-// 		}
-// 	});
+	let options = {
+		from: "Xapollon430@gmail.com",
+		to: email,
+		subject: "Sales",
+		attachments: { filename: "Sales.xlsx" }
+	};
 
-// 	let options = {
-// 		from: "Xapollon430@gmail.com",
-// 		to: email,
-// 		subject: "Sales",
-// 		attachments: { filename: "Sales.xlsx" }
-// 	};
-
-// 	transporter.sendMail(options);
-// };
+	transporter.sendMail(options);
+};
 module.exports = {
 	getDesigner,
 	getNation,
