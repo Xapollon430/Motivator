@@ -727,8 +727,8 @@ const Email = async (req, res) => {
 	let transporter = nodemailer.createTransport({
 		service: "gmail",
 		auth: {
-			user: process.env.EMAIL_NAME,
-			pass: process.env.EMAIL_PASS
+			user: "Xapollon430@gmail.com",
+			pass: "Anakonda11+"
 		}
 	});
 
