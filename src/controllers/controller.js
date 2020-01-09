@@ -717,13 +717,13 @@ const Email = async (req, res) => {
 		ProductObject,
 		SourceObject
 	];
-	let newWB = xlsx.utils.book_new();
-	let newWS = xlsx.utils.json_to_sheet(excelObject);
-	xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
-	console.log(process.env.EMAIL_NAME);
-	console.log(process.env.EMAIL_PASS);
+	// let newWB = xlsx.utils.book_new();
+	// let newWS = xlsx.utils.json_to_sheet(excelObject);
+	// xlsx.utils.book_append_sheet(newWB, newWS, "Sales");
+	// console.log(process.env.EMAIL_NAME);
+	// console.log(process.env.EMAIL_PASS);
 
-	xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
+	// xlsx.writeFile(newWB, `${__dirname}/Sales.xlsx`);
 	let transporter = nodemailer.createTransport({
 		service: "gmail",
 		auth: {
@@ -735,8 +735,8 @@ const Email = async (req, res) => {
 	let options = {
 		from: "Xapollon430@gmail.com",
 		to: email,
-		subject: "Sales",
-		attachments: { filename: "Sales.xlsx" }
+		subject: "Sales"
+		// attachments: { filename: "Sales.xlsx" }
 	};
 
 	transporter.sendMail(options, (err, data) => {
