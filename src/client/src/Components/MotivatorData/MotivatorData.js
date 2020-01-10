@@ -12,7 +12,7 @@ import {
 	updateShowSpecificMonth,
 	updateSpecificMonth
 } from "../../Store/actions";
-let times = ["This Month", "Last Month", "Last Year This Month"];
+let times = ["This Month", "Last Year This Month", "Last Month"];
 let dateNow = new Date();
 
 const MotivatorData = ({
