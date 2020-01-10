@@ -17,7 +17,7 @@ const getDesigner = async (req, res) => {
 
 	let weeklyProductsAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
 
-	res.json([thisMonthInfo, lastMonthInfo, lastYearThisMonth, weeklyProductsAndCustomerSource]);
+	res.json([thisMonthInfo, lastYearThisMonth, lastMonthInfo, weeklyProductsAndCustomerSource]);
 };
 
 const getNation = async (req, res) => {
@@ -37,7 +37,7 @@ const getNation = async (req, res) => {
 
 	let weeklyProductsAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
 
-	res.json([thisMonthInfo, lastMonthInfo, lastYearThisMonth, weeklyProductsAndCustomerSource]);
+	res.json([thisMonthInfo, lastYearThisMonth, lastMonthInfo, weeklyProductsAndCustomerSource]);
 };
 
 const getUsers = async (req, res) => {
@@ -70,8 +70,9 @@ const getCompany = async (req, res) => {
 
 	res.json([
 		salesInfo.thisMonthInfo,
-		salesInfo.lastMonthInfo,
 		salesInfo.lastYearThisMonth,
+		salesInfo.lastMonthInfo,
+
 		weeklyProductsAndCustomerSource,
 		thisMonthProductsAndCustomerSource
 	]);

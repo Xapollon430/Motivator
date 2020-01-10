@@ -42,7 +42,7 @@ const MotivatorData = ({
 			if (currentSelected === "Company") {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`http://localhost:5000/company`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -58,7 +58,7 @@ const MotivatorData = ({
 			} else if (nations.includes(currentSelected)) {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -72,7 +72,7 @@ const MotivatorData = ({
 			} else {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
@@ -100,7 +100,7 @@ const MotivatorData = ({
 		let data = JSON.stringify({
 			dateRequested
 		});
-		let specificMonthlyResponse = await fetch(`http://localhost:5000/email`, {
+		let specificMonthlyResponse = await fetch(`https://ucsdashboard.herokuapp.com/email`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
@@ -121,7 +121,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch(`http://localhost:5000/login`, {
+		let tokenResponse = await fetch(`https://ucsdashboard.herokuapp.com/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
