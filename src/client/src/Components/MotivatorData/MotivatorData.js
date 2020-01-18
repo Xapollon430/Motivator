@@ -376,9 +376,9 @@ const MotivatorData = ({
 							</div>
 						</div>
 					</div>
-					<h3>Products Sold</h3>
+					<h3>Customer Source</h3>
 					<div className="boxWrap">{monthProductsInvolvedView}</div>
-					<h3>Customer Source </h3>
+					<h3>Products Sold</h3>
 					<div className="boxWrap">{monthCustomerSourceView}</div>
 				</React.Fragment>
 			);
