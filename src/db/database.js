@@ -101,6 +101,7 @@ const createSales = async () => {
 			"Authorization": `Zoho-oauthtoken ${accessToken}`
 		}
 	});
+	let vehbi;
 
 	let dealsResponse4 = fetch(`https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=4`, {
 		headers: {
