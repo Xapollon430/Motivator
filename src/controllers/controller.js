@@ -12,12 +12,29 @@ const getDesigner = async (req, res) => {
 
 	let { thisMonthInfo, lastMonthInfo, lastYearThisMonth } = getDealsAndSales(deals, sets, name);
 
-	let salesWonForProductsSold = lastMonthInfo.salesWon;
-	let setsForCustomerSource = lastMonthInfo.sortedSets;
+	let salesWonForProductsSoldLastMonth = lastMonthInfo.salesWon;
+	let setsForCustomerSourceLastMonth = lastMonthInfo.sortedSets;
+	let salesWonForProductsSoldThisMonth = thisMonthInfo.salesWon;
+	let setsForCustomerSourceThisMonth = thisMonthInfo.sortedSets;
 
-	let weeklyProductsAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
+	let productsAndCustomerSourceLastMonth = getProductsAndCustomerSource(
+		salesWonForProductsSoldLastMonth,
+		setsForCustomerSourceLastMonth
+	);
+	let productsAndCustomerSourceThisMonth = getProductsAndCustomerSource(
+		salesWonForProductsSoldThisMonth,
+		setsForCustomerSourceThisMonth
+	);
 
-	res.json([thisMonthInfo, lastYearThisMonth, lastMonthInfo, weeklyProductsAndCustomerSource]);
+	console.log(productsAndCustomerSourceThisMonth);
+
+	res.json([
+		thisMonthInfo,
+		lastYearThisMonth,
+		lastMonthInfo,
+		productsAndCustomerSourceLastMonth,
+		productsAndCustomerSourceThisMonth
+	]);
 };
 
 const getNation = async (req, res) => {
@@ -31,13 +48,27 @@ const getNation = async (req, res) => {
 	}
 
 	let { thisMonthInfo, lastMonthInfo, lastYearThisMonth } = sortData(nationSalesInfo);
+	let salesWonForProductsSoldLastMonth = lastMonthInfo.salesWon;
+	let setsForCustomerSourceLastMonth = lastMonthInfo.sortedSets;
+	let salesWonForProductsSoldThisMonth = thisMonthInfo.salesWon;
+	let setsForCustomerSourceThisMonth = thisMonthInfo.sortedSets;
 
-	let salesWonForProductsSold = lastMonthInfo.salesWon;
-	let setsForCustomerSource = lastMonthInfo.sortedSets;
+	let productsAndCustomerSourceLastMonth = getProductsAndCustomerSource(
+		salesWonForProductsSoldLastMonth,
+		setsForCustomerSourceLastMonth
+	);
+	let productsAndCustomerSourceThisMonth = getProductsAndCustomerSource(
+		salesWonForProductsSoldThisMonth,
+		setsForCustomerSourceThisMonth
+	);
 
-	let weeklyProductsAndCustomerSource = getProductsAndCustomerSource(salesWonForProductsSold, setsForCustomerSource);
-
-	res.json([thisMonthInfo, lastYearThisMonth, lastMonthInfo, weeklyProductsAndCustomerSource]);
+	res.json([
+		thisMonthInfo,
+		lastYearThisMonth,
+		lastMonthInfo,
+		productsAndCustomerSourceLastMonth,
+		productsAndCustomerSourceThisMonth
+	]);
 };
 
 const getUsers = async (req, res) => {
@@ -54,14 +85,14 @@ const getCompany = async (req, res) => {
 
 	let salesInfo = await getDealsAndSalesForCompany(deals, sets);
 
-	let salesWonForProductsSoldThisWeek = salesInfo.lastMonthInfo.salesWon;
-	let setsForCustomerSourceThisWeek = salesInfo.lastMonthInfo.sortedSets;
+	let salesWonForProductsSoldLastMonth = salesInfo.lastMonthInfo.salesWon;
+	let setsForCustomerSourceLastMonth = salesInfo.lastMonthInfo.sortedSets;
 	let salesWonForProductsSoldThisMonth = salesInfo.thisMonthInfo.salesWon;
 	let setsForCustomerSourceThisMonth = salesInfo.thisMonthInfo.sortedSets;
 
-	let weeklyProductsAndCustomerSource = getProductsAndCustomerSource(
-		salesWonForProductsSoldThisWeek,
-		setsForCustomerSourceThisWeek
+	let lastMonthProductsAndCustomerSource = getProductsAndCustomerSource(
+		salesWonForProductsSoldLastMonth,
+		setsForCustomerSourceLastMonth
 	);
 	let thisMonthProductsAndCustomerSource = getProductsAndCustomerSource(
 		salesWonForProductsSoldThisMonth,
@@ -73,7 +104,7 @@ const getCompany = async (req, res) => {
 		salesInfo.lastYearThisMonth,
 		salesInfo.lastMonthInfo,
 
-		weeklyProductsAndCustomerSource,
+		lastMonthProductsAndCustomerSource,
 		thisMonthProductsAndCustomerSource
 	]);
 };

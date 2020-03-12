@@ -7,7 +7,7 @@ import {
 	updateSalesData,
 	updateLoading,
 	updateLoginFail,
-	updateWeeklyProductAndCustomerSource,
+	updateLastMonthProductAndCustomerSource,
 	updateThisMonthProductAndCustomerSource,
 	updateShowSpecificMonth,
 	updateSpecificMonth
@@ -24,10 +24,10 @@ const MotivatorData = ({
 	updateLoading,
 	loginFail,
 	loggedIn,
-	updateWeeklyProductAndCustomerSource,
+	updateLastMonthProductAndCustomerSource,
 	updateLoggedIn,
 	updateLoginFail,
-	weeklyProductAndCustomerSource,
+	lastMonthProductAndCustomerSource,
 	updateThisMonthProductAndCustomerSource,
 	thisMonthProductAndCustomerSource,
 	updateShowSpecificMonth,
@@ -42,46 +42,48 @@ const MotivatorData = ({
 			if (currentSelected === "Company") {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/company`, {
+				let salesResponse = await fetch(`http://localhost:5000/company`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
+				let lastMonthProductAndCustomerSource = salesJson.splice(3, 1);
 				let thisMonthProductAndCustomerSource = salesJson.splice(3, 1);
 
-				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
+				updateLastMonthProductAndCustomerSource(lastMonthProductAndCustomerSource);
 				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else if (nations.includes(currentSelected)) {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/nation?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
-
-				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
+				let lastMonthProductAndCustomerSource = salesJson.splice(3, 1);
+				let thisMonthProductAndCustomerSource = salesJson.splice(3, 1);
+				updateLastMonthProductAndCustomerSource(lastMonthProductAndCustomerSource);
+				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
 			} else {
 				updateShowSpecificMonth(false);
 
-				let salesResponse = await fetch(`https://ucsdashboard.herokuapp.com/designer?name=${currentSelected}`, {
+				let salesResponse = await fetch(`http://localhost:5000/designer?name=${currentSelected}`, {
 					headers: {
 						"Authorization": `Bearer ${JSON.parse(localStorage.getItem("jwtToken"))}`
 					}
 				});
 				let salesJson = await salesResponse.json();
 
-				let weeklyProductAndCustomerSource = salesJson.splice(3, 1);
-
-				updateWeeklyProductAndCustomerSource(weeklyProductAndCustomerSource);
+				let lastMonthProductAndCustomerSource = salesJson.splice(3, 1);
+				let thisMonthProductAndCustomerSource = salesJson.splice(3, 1);
+				updateLastMonthProductAndCustomerSource(lastMonthProductAndCustomerSource);
+				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
 			}
 			updateLoading(false);
@@ -100,7 +102,7 @@ const MotivatorData = ({
 		let data = JSON.stringify({
 			dateRequested
 		});
-		let specificMonthlyResponse = await fetch(`https://ucsdashboard.herokuapp.com/email`, {
+		let specificMonthlyResponse = await fetch(`http://localhost:5000/email`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
@@ -121,7 +123,7 @@ const MotivatorData = ({
 			username,
 			password
 		});
-		let tokenResponse = await fetch(`https://ucsdashboard.herokuapp.com/login`, {
+		let tokenResponse = await fetch(`http://localhost:5000/login`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			mode: "cors",
@@ -164,20 +166,14 @@ const MotivatorData = ({
 	} else if (loading) {
 		viewData = <img className="spinner" src={Spinner} />;
 	} else if (salesData) {
-		let productsInvolved = weeklyProductAndCustomerSource[0].sortedProductsInvolved;
-		let customerSource = weeklyProductAndCustomerSource[0].sortedProjectType;
+		let productsInvolved = lastMonthProductAndCustomerSource[0].sortedProductsInvolved;
+		let customerSource = lastMonthProductAndCustomerSource[0].sortedProjectType;
 		let productsInvolvedView = [];
 		let customerSourceView = [];
-		let productsInvolved2;
-		let customerSource2;
-		let productsInvolvedView2;
-		let customerSourceView2;
-		if (currentSelected === "Company") {
-			productsInvolved2 = thisMonthProductAndCustomerSource[0].sortedProductsInvolved;
-			customerSource2 = thisMonthProductAndCustomerSource[0].sortedProjectType;
-			productsInvolvedView2 = [];
-			customerSourceView2 = [];
-		}
+		let productsInvolved2 = thisMonthProductAndCustomerSource[0].sortedProductsInvolved;
+		let customerSource2 = thisMonthProductAndCustomerSource[0].sortedProjectType;
+		let productsInvolvedView2 = [];
+		let customerSourceView2 = [];
 
 		for (let i = 0; i < productsInvolved[0].length; i++) {
 			productsInvolvedView.push(
@@ -198,27 +194,24 @@ const MotivatorData = ({
 				</div>
 			);
 		}
-
-		if (currentSelected === "Company") {
-			for (let i = 0; i < productsInvolved2[0].length; i++) {
-				productsInvolvedView2.push(
-					<div key={i} className="boxWrap">
-						<div className="box">
-							<h6 className="dataTitle">{productsInvolved2[0][i]}</h6>
-							<div className="amount">{productsInvolved2[1][i]}</div>
-						</div>
+		for (let i = 0; i < productsInvolved2[0].length; i++) {
+			productsInvolvedView2.push(
+				<div key={i} className="boxWrap">
+					<div className="box">
+						<h6 className="dataTitle">{productsInvolved2[0][i]}</h6>
+						<div className="amount">{productsInvolved2[1][i]}</div>
 					</div>
-				);
-			}
+				</div>
+			);
+		}
 
-			for (let i = 0; i < customerSource2[0].length; i++) {
-				customerSourceView2.push(
-					<div key={i} className="box">
-						<h6 className="dataTitle">{customerSource2[0][i]}</h6>
-						<div className="amount">{customerSource2[1][i]}</div>
-					</div>
-				);
-			}
+		for (let i = 0; i < customerSource2[0].length; i++) {
+			customerSourceView2.push(
+				<div key={i} className="box">
+					<h6 className="dataTitle">{customerSource2[0][i]}</h6>
+					<div className="amount">{customerSource2[1][i]}</div>
+				</div>
+			);
 		}
 
 		viewData = (
@@ -283,14 +276,11 @@ const MotivatorData = ({
 				<div className="boxWrap">{productsInvolvedView}</div>
 				<h3>Customer Source Last Month</h3>
 				<div className="boxWrap">{customerSourceView}</div>
-				{currentSelected === "Company" && (
-					<React.Fragment>
-						<h3>Products Sold This Month</h3>
-						<div className="boxWrap">{productsInvolvedView2}</div>
-						<h3>Customer Source This Month</h3>
-						<div className="boxWrap">{customerSourceView2}</div>
-					</React.Fragment>
-				)}
+
+				<h3>Products Sold This Month</h3>
+				<div className="boxWrap">{productsInvolvedView2}</div>
+				<h3>Customer Source This Month</h3>
+				<div className="boxWrap">{customerSourceView2}</div>
 			</div>
 		);
 
@@ -396,7 +386,7 @@ const MapStateToProps = state => {
 		loading: state.loading,
 		loginFail: state.loginFail,
 		loggedIn: state.loggedIn,
-		weeklyProductAndCustomerSource: state.weeklyProductAndCustomerSource,
+		lastMonthProductAndCustomerSource: state.lastMonthProductAndCustomerSource,
 		thisMonthProductAndCustomerSource: state.thisMonthProductAndCustomerSource,
 		showSpecificMonth: state.showSpecificMonth,
 		specificMonth: state.specificMonth
@@ -419,7 +409,7 @@ const MapDispatchToProps = dispatch => {
 		updateSpecificMonth: data => {
 			dispatch(updateSpecificMonth(data));
 		},
-		updateWeeklyProductAndCustomerSource: data => dispatch(updateWeeklyProductAndCustomerSource(data)),
+		updateLastMonthProductAndCustomerSource: data => dispatch(updateLastMonthProductAndCustomerSource(data)),
 		updateThisMonthProductAndCustomerSource: data => dispatch(updateThisMonthProductAndCustomerSource(data))
 	};
 };

@@ -8,7 +8,7 @@ const initialState = {
 	loading: false,
 	loggedIn: false,
 	loginFail: false,
-	weeklyProductAndCustomerSource: "",
+	lastMonthProductAndCustomerSource: "",
 	thisMonthProductAndCustomerSource: "",
 	showSpecificMonth: false,
 	specificMonth: ""
@@ -30,8 +30,8 @@ const reducer = (state = initialState, action) => {
 			return { ...state, loggedIn: action.payload };
 		case "UPDATE_LOGIN_FAIL":
 			return { ...state, loginFail: action.payload };
-		case "UPDATE_WEEKLY_PRODUCT_AND_CUSTOMER_SOURCE":
-			return { ...state, weeklyProductAndCustomerSource: action.payload };
+		case "UPDATE_LAST_MONTH_PRODUCT_AND_CUSTOMER_SOURCE":
+			return { ...state, lastMonthProductAndCustomerSource: action.payload };
 		case "UPDATE_THIS_MONTH_PRODUCT_AND_CUSTOMER_SOURCE":
 			return { ...state, thisMonthProductAndCustomerSource: action.payload };
 		case "UPDATE_SPECIFIC_MONTH":

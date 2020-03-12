@@ -63,9 +63,9 @@ export const updateThisMonthProductAndCustomerSource = thisMonthProductAndCustom
 	};
 };
 
-export const updateWeeklyProductAndCustomerSource = weeklyProductAndCustomerSource => {
+export const updateLastMonthProductAndCustomerSource = lastMonthProductAndCustomerSource => {
 	return {
-		type: "UPDATE_WEEKLY_PRODUCT_AND_CUSTOMER_SOURCE",
-		payload: weeklyProductAndCustomerSource
+		type: "UPDATE_LAST_MONTH_PRODUCT_AND_CUSTOMER_SOURCE",
+		payload: lastMonthProductAndCustomerSource
 	};
 };
