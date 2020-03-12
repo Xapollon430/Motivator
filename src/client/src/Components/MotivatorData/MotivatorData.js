@@ -82,6 +82,7 @@ const MotivatorData = ({
 
 				let lastMonthProductAndCustomerSource = salesJson.splice(3, 1);
 				let thisMonthProductAndCustomerSource = salesJson.splice(3, 1);
+				console.log(thisMonthProductAndCustomerSource);
 				updateLastMonthProductAndCustomerSource(lastMonthProductAndCustomerSource);
 				updateThisMonthProductAndCustomerSource(thisMonthProductAndCustomerSource);
 				updateSalesData(salesJson);
