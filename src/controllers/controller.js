@@ -27,7 +27,6 @@ const getDesigner = async (req, res) => {
 	);
 
 	console.log(productsAndCustomerSourceThisMonth);
-	let x;
 	res.json([
 		thisMonthInfo,
 		lastYearThisMonth,
