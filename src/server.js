@@ -15,11 +15,13 @@ app.use(cors());
 app.use(Router);
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static("./src/client/build"));
-	app.get("/", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "src", "client", "build", "index.html"));
-	});
+  app.use(express.static("./src/client/build"));
+  app.get("/", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "src", "client", "build", "index.html")
+    );
+  });
 }
 app.listen(PORT, () => {
-	console.log("server started");
+  console.log("server started");
 });
