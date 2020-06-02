@@ -167,7 +167,7 @@ const getUsersName = async (nation) => {
       nationsEndPoint.push(users[i].territories[0].name);
     }
 
-    nationsEndPoint = [...new Set(nationsEndPoint)];
+    nationsEndPoint = [...new Set(nationsEndPoint)]; // gets rid of duplicate nations
 
     return {
       usersEndPoint,
