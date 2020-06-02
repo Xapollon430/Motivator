@@ -83,7 +83,6 @@ const getSales = async () => {
 
 const createSales = async () => {
   let accessToken = await getAccessToken();
-  console.log("Started");
   let dealsResponse1 = fetch(
     `https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time`,
     {
