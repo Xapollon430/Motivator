@@ -44,6 +44,7 @@ const getNation = async (req, res) => {
   let { name } = req.query;
   let { deals, sets } = await DB.getSales();
   let filteredUsers = await getUsersName(name);
+  console.log(filteredUsers);
   let nationSalesInfo = [];
 
   for (let i = 0; i < filteredUsers.length; i++) {
@@ -151,8 +152,6 @@ const getUsersName = async (nation) => {
 
   let { users } = await usersResponse.json();
 
-  console.log(users);
-
   if (!nation) {
     // returns all active users and nations
 
@@ -177,6 +176,7 @@ const getUsersName = async (nation) => {
 
   for (let i = 0; i < users.length; i++) {
     // returns users for a speicific nation
+    if (users[i].full_name === "UCS Leads") continue;
 
     if (users[i].territories[0].name === nation) {
       filteredUsers.push(users[i].full_name);
