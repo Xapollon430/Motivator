@@ -109,7 +109,6 @@ const createSales = async () => {
       },
     }
   );
-  let omer;
 
   let dealsResponse4 = fetch(
     `https://www.zohoapis.com/crm/v2/Deals?sort_order=desc&sort_by=Created_Time&page=4`,
@@ -155,6 +154,29 @@ const createSales = async () => {
       },
     }
   );
+
+  await Promise.all([
+    dealsResponse1,
+    dealsResponse2,
+    dealsResponse3,
+    dealsResponse4,
+    dealsResponse5,
+    dealsResponse6,
+    dealsResponse7,
+    dealsResponse8,
+  ])
+    .then((responses) => {
+      return Promise.all(responses.map((r) => r.json()));
+    })
+    .then((responses) => {
+      responses.map((r) => {
+        console.log(typeof r.data);
+        if (r.data == undefined) {
+          console.log(r);
+        }
+        deals.push(r.data);
+      });
+    });
 
   let setsResponse1 = fetch(
     `https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time`,
@@ -246,6 +268,31 @@ const createSales = async () => {
     }
   );
 
+  await Promise.all([
+    setsResponse1,
+    setsResponse2,
+    setsResponse3,
+    setsResponse4,
+    setsResponse5,
+    setsResponse6,
+    setsResponse7,
+    setsResponse8,
+    setsResponse9,
+    setsResponse10,
+  ])
+    .then((responses) => {
+      return Promise.all(responses.map((r) => r.json()));
+    })
+    .then((responses) => {
+      responses.map((r) => {
+        console.log(typeof r.data);
+        if (r.data == undefined) {
+          console.log(r);
+        }
+        sets.push(r.data);
+      });
+    });
+
   let setsResponse11 = fetch(
     `https://www.zohoapis.com/crm/v2/Contacts?sort_order=desc&sort_by=Created_Time&page=11`,
     {
@@ -264,43 +311,17 @@ const createSales = async () => {
     }
   );
 
-  await Promise.all([
-    dealsResponse1,
-    dealsResponse2,
-    dealsResponse3,
-    dealsResponse4,
-    dealsResponse5,
-    dealsResponse6,
-    dealsResponse7,
-    dealsResponse8,
-  ])
-    .then((responses) => {
-      return Promise.all(responses.map((r) => r.json()));
-    })
-    .then((responses) => {
-      responses.map((r) => deals.push(...r.data));
-    });
-
-  await Promise.all([
-    setsResponse1,
-    setsResponse2,
-    setsResponse3,
-    setsResponse4,
-    setsResponse5,
-    setsResponse6,
-    setsResponse7,
-    setsResponse8,
-    setsResponse9,
-    setsResponse10,
-    setsResponse11,
-    setsResponse12,
-  ])
+  await Promise.all([setsResponse11, setsResponse12])
     .then((responses) => {
       return Promise.all(responses.map((r) => r.json()));
     })
     .then((responses) => {
       responses.map((r) => {
-        sets.push(...r.data);
+        console.log(typeof r.data);
+        if (r.data == undefined) {
+          console.log(r);
+        }
+        sets.push(r.data);
       });
     });
 

@@ -30,7 +30,6 @@ const getDesigner = async (req, res) => {
     setsForCustomerSourceThisMonth
   );
 
-  console.log(productsAndCustomerSourceThisMonth);
   res.json([
     thisMonthInfo,
     lastYearThisMonth,
@@ -44,7 +43,6 @@ const getNation = async (req, res) => {
   let { name } = req.query;
   let { deals, sets } = await DB.getSales();
   let filteredUsers = await getUsersName(name);
-  console.log(filteredUsers);
   let nationSalesInfo = [];
 
   for (let i = 0; i < filteredUsers.length; i++) {
