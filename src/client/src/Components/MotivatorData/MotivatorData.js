@@ -68,7 +68,7 @@ const MotivatorData = ({
         updateShowSpecificMonth(false);
 
         let salesResponse = await fetch(
-          `https://ucsdashboard.herokuapp.com/nation?name=${currentSelected}`,
+          `http://localhost:5000/nation?name=${currentSelected}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(

@@ -170,11 +170,7 @@ const createSales = async () => {
     })
     .then((responses) => {
       responses.map((r) => {
-        console.log(typeof r.data);
-        if (r.data == undefined) {
-          console.log(r);
-        }
-        deals.push(r.data);
+        deals.push(...r.data);
       });
     });
 
@@ -285,11 +281,7 @@ const createSales = async () => {
     })
     .then((responses) => {
       responses.map((r) => {
-        console.log(typeof r.data);
-        if (r.data == undefined) {
-          console.log(r);
-        }
-        sets.push(r.data);
+        sets.push(...r.data);
       });
     });
 
@@ -317,11 +309,7 @@ const createSales = async () => {
     })
     .then((responses) => {
       responses.map((r) => {
-        console.log(typeof r.data);
-        if (r.data == undefined) {
-          console.log(r);
-        }
-        sets.push(r.data);
+        sets.push(...r.data);
       });
     });
 
