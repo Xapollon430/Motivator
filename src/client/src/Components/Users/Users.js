@@ -6,7 +6,6 @@ import {
   updateLoading,
 } from "../../Store/actions";
 import { connect } from "react-redux";
-let dateNow = new Date();
 
 const Users = ({
   designers,
@@ -19,13 +18,16 @@ const Users = ({
 }) => {
   useEffect(() => {
     const getUsers = async () => {
-      let usersResponse = await fetch(`http://localhost:5000/users`, {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("jwtToken")
-          )}`,
-        },
-      });
+      let usersResponse = await fetch(
+        `https://ucsdashboard.herokuapp.com/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("jwtToken")
+            )}`,
+          },
+        }
+      );
       let users = await usersResponse.json();
       updateNations(users.nationsEndPoint);
       updateDesigners(users);
